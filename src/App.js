@@ -1,13 +1,9 @@
 import React from 'react';
-import './App.css';
-import rockGlass from './images/rockGlass.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Routes from './routes/Routes';
 
 function App() {
   return (
-    <div className="meals">
-      <div>xablau</div>
-    </div>
+    <Routes />
   );
 }
 
