@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import capitalizeFirstLetter from '../helpers/capitalizeFirstLetter';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
@@ -12,13 +12,15 @@ const Header = () => {
 
   return (
     <div>
-      <img
-        src={ profileIcon }
-        alt="profile-icon"
-        data-testid="profile-top-btn"
-      />
+      <Link to="/profile">
+        <img
+          src={ profileIcon }
+          alt="profile-icon"
+          data-testid="profile-top-btn"
+        />
+      </Link>
 
-      <h2>{ capitalizeFirstLetter(pathname) }</h2>
+      <h2 data-testid="page-title">{ capitalizeFirstLetter(pathname) }</h2>
 
       {
         hasIcon() ? (
