@@ -22,9 +22,7 @@ const Login = () => {
     saveTokenToLocalStorage('mealsToken', '1');
     saveTokenToLocalStorage('cocktailsToken', '1');
     history.push('/foods');
-    // console.log(chave);
   };
-  console.log(isPasswordValid, isEmailValid, isButtonDisabled);
 
   return (
     <div>
