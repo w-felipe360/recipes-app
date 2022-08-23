@@ -7,6 +7,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import RecipeCard from '../components/RecipeCard';
 import styles from './Recipes.module.css';
+import requestFilteredCategoriesThunk from '../redux/actions/requestFilteredRecipesThunk';
+import { showAllCategoriesAction } from '../redux/actions/recipeDataActions';
 
 const Recipes = () => {
   const { location: { pathname } } = useHistory();
@@ -34,6 +36,10 @@ const Recipes = () => {
       });
   };
 
+  const handleCategoryClick = (category, type) => {
+    dispatch(requestFilteredCategoriesThunk(category, type));
+  };
+
   const storedRecipeCategories = useSelector((state) => state
     .recipeDataReducer.recipeCategories);
 
@@ -41,15 +47,25 @@ const Recipes = () => {
     const categories = storedRecipeCategories.meals || storedRecipeCategories.drinks;
     const maxCategories = 5;
     const firstFiveCategories = categories.slice(0, maxCategories);
-    return firstFiveCategories.map(({ strCategory: category }) => (
-      <button
-        data-testid={ `${category}-category-filter` }
-        key={ category }
-        type="button"
-      >
-        {category}
-      </button>
-    ));
+    const response = firstFiveCategories.map((categoryObj) => {
+      const type = storedRecipeCategories.meals ? 'food' : 'drink';
+      const { strCategory: category } = categoryObj;
+      return (
+        <button
+          data-testid={ `${category}-category-filter` }
+          key={ category }
+          type="button"
+          onClick={ () => handleCategoryClick(type, category) }
+        >
+          {category}
+        </button>
+      );
+    });
+    return response;
+  };
+
+  const handleShowAllCategories = () => {
+    dispatch(showAllCategoriesAction());
   };
 
   const isRecipeFetchDone = !!storedRecipeData?.meals?.length
@@ -58,6 +74,12 @@ const Recipes = () => {
     || !!storedRecipeCategories?.drinks?.length;
   const areAllFetchesDone = isRecipeFetchDone && isCategoryFetchDone;
 
+  const storedRecipeCategoryData = useSelector((state) => state
+    .recipeDataReducer.recipeCategoryData);
+
+  const isCategoryTrue = !!storedRecipeCategoryData?.meals?.length
+  || storedRecipeCategoryData?.drinks?.length;
+
   return (
     <div>
       <Header />
@@ -65,10 +87,21 @@ const Recipes = () => {
         areAllFetchesDone && (
           <div>
             <section>
+              <button
+                type="button"
+                data-testid="All-category-filter"
+                onClick={ () => handleShowAllCategories() }
+              >
+                All
+              </button>
               { renderCategoryButtons() }
             </section>
             <main className={ styles['card-container'] }>
-              { renderCards(storedRecipeData) }
+              {
+                isCategoryTrue
+                  ? renderCards(storedRecipeCategoryData)
+                  : renderCards(storedRecipeData)
+              }
             </main>
           </div>
         )

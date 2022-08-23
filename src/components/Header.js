@@ -13,7 +13,6 @@ const Header = () => {
   const initialState = -1;
   const [click, setClick] = useState(initialState);
 
-  console.log(click);
   return (
     <div>
       <Link to="/profile">
