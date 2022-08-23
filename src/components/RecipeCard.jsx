@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './RecipeCard.module.css';
 
-const RecipeCard = ({ recipeData: { index, thumbnail, recipeName } }) => {
-  console.log(index);
+function RecipeCard({ recipeData: { index, thumbnail, recipeName } }) {
   return (
     <div
       data-testid={ `${index}-recipe-card` }
@@ -20,7 +19,7 @@ const RecipeCard = ({ recipeData: { index, thumbnail, recipeName } }) => {
       </span>
     </div>
   );
-};
+}
 
 RecipeCard.propTypes = {
   recipeData: PropTypes.shape({
