@@ -29,7 +29,6 @@ const Header = () => {
           />
         ) : null
       }
-
     </div>
   );
 };
