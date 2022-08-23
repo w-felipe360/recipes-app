@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import requestRecipesThunk from '../redux/actions/getRecipeListThunk';
+import requestCategoriesThunk from '../redux/actions/requestCategoriesThunk';
+import requestRecipesThunk from '../redux/actions/requestRecipesThunk';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import RecipeCard from '../components/RecipeCard';
@@ -14,6 +15,7 @@ const Recipes = () => {
     const rest = -1;
     const query = pathname.slice(1, rest);
     dispatch(requestRecipesThunk(query));
+    dispatch(requestCategoriesThunk(query));
   }, []);
 
   const storedRecipeData = useSelector((state) => state.recipeDataReducer.recipeData);
@@ -32,15 +34,45 @@ const Recipes = () => {
       });
   };
 
-  const isFetchDone = !!storedRecipeData?.meals?.length
+  const storedRecipeCategories = useSelector((state) => state
+    .recipeDataReducer.recipeCategories);
+
+  const renderCategoryButtons = () => {
+    const categories = storedRecipeCategories.meals || storedRecipeCategories.drinks;
+    const maxCategories = 5;
+    const firstFiveCategories = categories.slice(0, maxCategories);
+    return firstFiveCategories.map(({ strCategory: category }) => (
+      <button
+        data-testid={ `${category}-category-filter` }
+        key={ category }
+        type="button"
+      >
+        {category}
+      </button>
+    ));
+  };
+
+  const isRecipeFetchDone = !!storedRecipeData?.meals?.length
     || !!storedRecipeData?.drinks?.length;
+  const isCategoryFetchDone = !!storedRecipeCategories?.meals?.length
+    || !!storedRecipeCategories?.drinks?.length;
+  const areAllFetchesDone = isRecipeFetchDone && isCategoryFetchDone;
 
   return (
     <div>
       <Header />
-      <main className={ styles['card-container'] }>
-        { isFetchDone && renderCards(storedRecipeData) }
-      </main>
+      {
+        areAllFetchesDone && (
+          <div>
+            <section>
+              { renderCategoryButtons() }
+            </section>
+            <main className={ styles['card-container'] }>
+              { renderCards(storedRecipeData) }
+            </main>
+          </div>
+        )
+      }
       <Footer />
     </div>
   );

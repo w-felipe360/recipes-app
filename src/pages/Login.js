@@ -12,7 +12,7 @@ const Login = () => {
   const isPasswordValid = password.length < minLength;
   const isEmailValid = !VALID_EMAIL_REGEX.test(email);
   const isButtonDisabled = isPasswordValid || isEmailValid;
-  console.log(isPasswordValid, isEmailValid, isButtonDisabled);
+
   return (
     <div>
       <input
