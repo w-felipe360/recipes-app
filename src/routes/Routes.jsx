@@ -18,6 +18,8 @@ function Routes() {
 
         <Route path="/recipedetails" component={ RecipeDetails } />
         <Route path="/recipeinprogress" component={ RecipeInProgress } />
+        <Route path="/foods" component={ Recipes } />
+        <Route path="/drinks" component={ Recipes } />
         <Route path="/recipes" component={ Recipes } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/profile" component={ Profile } />
