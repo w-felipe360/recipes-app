@@ -1,63 +1,27 @@
 import React from 'react';
+import { render } from '@testing-library/react';
+import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { applyMiddleware, createStore } from 'redux';
-import { render } from '@testing-library/react';
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from '../redux/reducers';
 
-function withRouter(component, history) {
-  return (
-    <Router history={ history }>
-      { component }
-    </Router>
-  );
-}
+export const renderWithRouterAndRedux = (component, initialState, route = '/') => {
+  const store = createStore(rootReducer, initialState, applyMiddleware(thunk));
+  const history = createMemoryHistory({ initialEntries: [route] });
 
-function withRedux(component, store) {
-  return (
-    <Provider store={ store }>
-      { component }
-    </Provider>
-  );
-}
-
-export function renderWithRouter(
-  component,
-  {
-    initialPath = '/',
-    history = createMemoryHistory([initialPath]),
-  } = {},
-) {
   return {
-    ...render(withRouter(component, history)),
+    ...render(
+      <Provider store={ store }>
+        <Router history={ history }>
+          {component}
+        </Router>
+      </Provider>,
+    ),
     history,
-  };
-}
-
-export function renderWithRedux(component, options = {}) {
-  const {
-    initialState,
-    store = initialState
-      ? createStore(rootReducer, initialState, applyMiddleware(thunk))
-      : createStore(rootReducer, applyMiddleware(thunk)),
-  } = options;
-
-  return {
-    ...render(withRedux(component, store)),
     store,
   };
-}
+};
 
-export function renderWithRouterAndRedux(component, options = {}) {
-  const {
-    initialPath = '/',
-    history = createMemoryHistory([initialPath]),
-  } = options;
-
-  return {
-    ...renderWithRedux(withRouter(component, history), options),
-    history,
-  };
-}
+export default renderWithRouterAndRedux;

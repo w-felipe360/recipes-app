@@ -11,7 +11,7 @@ it('should be rendering the logging screen', () => {
 });
 test(`se ao preencher os inputs de email e senha, 
 o botão de login deve estar habilitado`, () => {
-  renderWithRouterAndRedux(<Login />);
+  const { history } = renderWithRouterAndRedux(<Login />);
   const emailInput = screen.getByPlaceholderText('E-mail');
   const passwordInput = screen.getByPlaceholderText('Senha');
   const button = screen.getByTestId('login-submit-btn');
@@ -20,4 +20,6 @@ o botão de login deve estar habilitado`, () => {
   userEvent.type(emailInput, 'teste@trybe.com');
   userEvent.type(passwordInput, '1234567');
   expect(button).toBeEnabled();
+  userEvent.click(button);
+  expect(history.location.pathname).toBe('/foods');
 });
