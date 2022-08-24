@@ -36,8 +36,15 @@ const Recipes = () => {
       });
   };
 
+  const storedRecipeCategoryData = useSelector((state) => state
+    .recipeDataReducer.recipeCategoryData);
+
   const handleCategoryClick = (category, type) => {
-    dispatch(requestFilteredCategoriesThunk(category, type));
+    const isCategoryTrue = !!storedRecipeCategoryData?.meals?.length
+    || !!storedRecipeCategoryData?.drinks?.length;
+    console.log(isCategoryTrue);
+    if (isCategoryTrue) { dispatch(showAllCategoriesAction()); }
+    if (!isCategoryTrue) { dispatch(requestFilteredCategoriesThunk(category, type)); }
   };
 
   const storedRecipeCategories = useSelector((state) => state
@@ -73,9 +80,6 @@ const Recipes = () => {
   const isCategoryFetchDone = !!storedRecipeCategories?.meals?.length
     || !!storedRecipeCategories?.drinks?.length;
   const areAllFetchesDone = isRecipeFetchDone && isCategoryFetchDone;
-
-  const storedRecipeCategoryData = useSelector((state) => state
-    .recipeDataReducer.recipeCategoryData);
 
   const isCategoryTrue = !!storedRecipeCategoryData?.meals?.length
   || storedRecipeCategoryData?.drinks?.length;
