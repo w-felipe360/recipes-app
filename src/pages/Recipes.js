@@ -26,13 +26,23 @@ const Recipes = () => {
     const renderData = recipeDataArray.meals ?? recipeDataArray.drinks;
     const numberOfRecipes = 12;
     return renderData.slice(0, numberOfRecipes)
-      .map(({ strMealThumb, strDrinkThumb, strMeal, strDrink }, index) => {
+      .map((
+        { strMealThumb, strDrinkThumb, strMeal, strDrink, idMeal, idDrink },
+        index,
+      ) => {
         const data = {
           thumbnail: strMealThumb ?? strDrinkThumb,
           recipeName: strMeal ?? strDrink,
+          id: idMeal ?? idDrink,
           index,
+          pathname,
         };
-        return <RecipeCard recipeData={ data } key={ data.index } />;
+        return (
+          <RecipeCard
+            recipeData={ data }
+            key={ data.index }
+          />
+        );
       });
   };
 

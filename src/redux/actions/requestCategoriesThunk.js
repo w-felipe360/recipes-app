@@ -9,11 +9,10 @@ const onFetchCategoriesSuccessAction = (payload) => ({
 });
 
 const requestCategoriesThunk = (query) => async (dispatch) => {
-  const fetchFoodOrDrinkCategories = {
-    food: fetch(FOOD_ENDPOINT).then((response) => response.json()),
-    drink: fetch(DRINK_ENDPOINT).then((response) => response.json()),
-  };
-  const fetchData = await fetchFoodOrDrinkCategories[query];
+  const endpoint = query === 'food' ? FOOD_ENDPOINT : DRINK_ENDPOINT;
+
+  const response = await fetch(endpoint);
+  const fetchData = await response.json();
   dispatch(onFetchCategoriesSuccessAction(fetchData));
 };
 
