@@ -16,7 +16,8 @@ function Routes() {
 
         {/* As rotas a baixo foram as primeiras que desenvolvemos */}
 
-        <Route path="/recipedetails" component={ RecipeDetails } />
+        <Route exact path="/foods/:id" component={ RecipeDetails } />
+        <Route exact path="/drinks/:id" component={ RecipeDetails } />
         <Route path="/recipeinprogress" component={ RecipeInProgress } />
         <Route exact path="/foods" component={ Recipes } />
         <Route exact path="/drinks" component={ Recipes } />
@@ -29,8 +30,6 @@ function Routes() {
 
         {/* <Route path="/foods" component={ x } />
         <Route path="/drinks" component={ x } /> */}
-        <Route exact path="/foods/:id" component={ RecipeDetails } />
-        <Route exact path="/drinks/:id" component={ RecipeDetails } />
         <Route path="/foods/:id/in-progress" component={ RecipeInProgress } />
         <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
         {/* <Route path="/profile" component={ x } />
