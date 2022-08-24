@@ -12,15 +12,19 @@ function Routes() {
   return (
     <div>
       <Switch>
-        <Route exact path="/" component={ Login } />
-
         {/* As rotas a baixo foram as primeiras que desenvolvemos */}
-
+        <Route path="/foods/:id/in-progress" component={ RecipeInProgress } />
+        <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
         <Route exact path="/foods/:id" component={ RecipeDetails } />
         <Route exact path="/drinks/:id" component={ RecipeDetails } />
-        <Route path="/recipeinprogress" component={ RecipeInProgress } />
-        <Route exact path="/foods" component={ Recipes } />
-        <Route exact path="/drinks" component={ Recipes } />
+        <Route
+          path="/foods"
+          render={ (props) => <Recipes { ...props } key={ window.location.pathname } /> }
+        />
+        <Route
+          path="/drinks"
+          render={ (props) => <Recipes { ...props } key={ window.location.pathname } /> }
+        />
         <Route path="/recipes" component={ Recipes } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/profile" component={ Profile } />
@@ -28,14 +32,7 @@ function Routes() {
 
         {/* As rotas a baixo tem o path exigido pelo projeto */}
 
-        {/* <Route path="/foods" component={ x } />
-        <Route path="/drinks" component={ x } /> */}
-        <Route path="/foods/:id/in-progress" component={ RecipeInProgress } />
-        <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
-        {/* <Route path="/profile" component={ x } />
-        <Route path="/done-recipes" component={ x } />
-        <Route path="/favorite-recipes" component={ x } /> */}
-
+        <Route exact path="/" component={ Login } />
       </Switch>
     </div>
   );

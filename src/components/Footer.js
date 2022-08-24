@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import drinkIcon from '../images/drinkIcon.svg';
 import mealIcon from '../images/mealIcon.svg';
+import styles from './Footer.module.css';
 
 const Footer = () => {
   const history = useHistory();
@@ -11,11 +12,11 @@ const Footer = () => {
   };
 
   return (
-    <div data-testid="footer">
+    <div data-testid="footer" className={ styles.container }>
       <button
         type="button"
         onClick={
-          () => redirectHistory('/rotabebida')
+          () => redirectHistory('/drinks')
         }
       >
         <img
@@ -28,7 +29,7 @@ const Footer = () => {
       <button
         type="button"
         onClick={
-          () => redirectHistory('/rotacomida')
+          () => redirectHistory('/foods')
         }
       >
         <img src={ mealIcon } alt="meal-icon" data-testid="food-bottom-btn" />
