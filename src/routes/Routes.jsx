@@ -18,8 +18,8 @@ function Routes() {
 
         <Route path="/recipedetails" component={ RecipeDetails } />
         <Route path="/recipeinprogress" component={ RecipeInProgress } />
-        <Route path="/foods" component={ Recipes } />
-        <Route path="/drinks" component={ Recipes } />
+        <Route exact path="/foods" component={ Recipes } />
+        <Route exact path="/drinks" component={ Recipes } />
         <Route path="/recipes" component={ Recipes } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/profile" component={ Profile } />
@@ -28,12 +28,12 @@ function Routes() {
         {/* As rotas a baixo tem o path exigido pelo projeto */}
 
         {/* <Route path="/foods" component={ x } />
-        <Route path="/drinks" component={ x } />
-        <Route path="foods/:id" component={ x } />
-        <Route path="drinks/:id" component={ x } />
-        <Route path="/foods/:id/in-progress" component={ x } />
-        <Route path="/drinks/:id/in-progress" component={ x } />
-        <Route path="/profile" component={ x } />
+        <Route path="/drinks" component={ x } /> */}
+        <Route exact path="/foods/:id" component={ RecipeDetails } />
+        <Route exact path="/drinks/:id" component={ RecipeDetails } />
+        <Route path="/foods/:id/in-progress" component={ RecipeInProgress } />
+        <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
+        {/* <Route path="/profile" component={ x } />
         <Route path="/done-recipes" component={ x } />
         <Route path="/favorite-recipes" component={ x } /> */}
 
