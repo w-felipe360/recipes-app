@@ -19,19 +19,19 @@ const SearchBar = () => {
     if (radioSelected === 'ingredient') {
       response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${search}`);
       data = await response.json();
-      newData = data.meals[0];
+      newData = data.meals;
       console.log(newData);
     }
     if (radioSelected === 'name') {
       response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`);
       data = await response.json();
-      newData = data.meals[0];
+      newData = data.meals;
       console.log(newData);
     }
     if (radioSelected === 'first-letter') {
       response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${search}`);
       data = await response.json();
-      newData = data.meals[0];
+      newData = data.meals;
       console.log(newData);
     }
     // if(radioSelected === '')
