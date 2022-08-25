@@ -1,0 +1,6 @@
+.recommendation {
+  display: flex;
+  width: 500px;
+  height: 250px;
+  overflow: auto;
+}
