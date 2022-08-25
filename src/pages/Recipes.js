@@ -35,8 +35,9 @@ const Recipes = () => {
 
   const handleSingleElement = (data) => {
     const hasOnlyOneElement = data.length === 1;
+    const isRenderingSearchBar = toRender === 'recipeSearchData';
     const id = data[0].idDrink || data[0].idMeal;
-    if (hasOnlyOneElement) { push(`${pathname}/${id}`); }
+    if (hasOnlyOneElement && isRenderingSearchBar) { push(`${pathname}/${id}`); }
   };
 
   const renderCases = {
