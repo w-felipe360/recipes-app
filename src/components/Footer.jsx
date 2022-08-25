@@ -27,6 +27,7 @@ const Footer = () => {
       </button>
       Footer
       <button
+        data-testid="meals-bottom-btn"
         type="button"
         onClick={
           () => redirectHistory('/foods')

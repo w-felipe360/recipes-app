@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 
 const Profile = () => {
   const history = useHistory();
@@ -17,9 +16,7 @@ const Profile = () => {
 
   return (
     <div>
-      <Header />
       <br />
-      Profile
       {/* Resgatar email do local storage e mostrar nesse h2 */}
       <h2 data-testid="profile-email">Email</h2>
       <button
