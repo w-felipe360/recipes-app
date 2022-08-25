@@ -15,7 +15,7 @@ const requestSearchFilterThunk = (
   const urlQuery = radioValue === 'ingredient' ? 'filter' : 'search';
 
   const ingredientEndpoint = `${endpointUrlBody}${urlQuery}.php?i=${searchValue}`;
-  const nameEndpoint = `${endpointUrlBody}${urlQuery}.php?s=${searchValue.toLowerCase()}`;
+  const nameEndpoint = `${endpointUrlBody}${urlQuery}.php?s=${searchValue}`;
   const firstLetterEndpoint = `${endpointUrlBody}${urlQuery}.php?f=${searchValue}`;
 
   const endpoints = {

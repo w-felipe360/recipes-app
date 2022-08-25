@@ -26,6 +26,7 @@ const Recipes = () => {
 
   const toRender = useSelector((state) => state
     .recipeDataReducer.toRender);
+  console.log(toRender);
 
   const {
     recipeData, recipeCategoryData, recipeSearchData,
