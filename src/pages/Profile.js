@@ -19,7 +19,7 @@ const Profile = () => {
     <div>
       <br />
       {/* Resgatar email do local storage e mostrar nesse h2 */}
-      <h2 data-testid="profile-email">{dados.email}</h2>
+      <h2 data-testid="profile-email">{dados?.email}</h2>
       <button
         type="button"
         data-testid="profile-done-btn"
