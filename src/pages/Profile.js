@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 
 const Profile = () => {
   const history = useHistory();
@@ -9,6 +8,7 @@ const Profile = () => {
   const redirectHistory = (param) => {
     history.push(param);
   };
+  const dados = JSON.parse(localStorage.getItem('user'));
 
   const redirectLogout = () => {
     localStorage.clear();
@@ -17,16 +17,14 @@ const Profile = () => {
 
   return (
     <div>
-      <Header />
       <br />
-      Profile
       {/* Resgatar email do local storage e mostrar nesse h2 */}
-      <h2 data-testid="profile-email">Email</h2>
+      <h2 data-testid="profile-email">{dados.email}</h2>
       <button
         type="button"
         data-testid="profile-done-btn"
         onClick={
-          () => redirectHistory('/receitas-feitas')
+          () => redirectHistory('/done-recipes')
         }
       >
         Done Recipes
@@ -38,7 +36,7 @@ const Profile = () => {
         type="button"
         data-testid="profile-favorite-btn"
         onClick={
-          () => redirectHistory('/receitas-favoritas')
+          () => redirectHistory('/favorite-recipes')
         }
       >
         Favorite Recipes
