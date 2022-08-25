@@ -11,7 +11,7 @@ import requestFilteredCategoriesThunk from '../redux/actions/requestFilteredReci
 import { showAllCategoriesAction } from '../redux/actions/recipeDataActions';
 
 const Recipes = () => {
-  const { location: { pathname } } = useHistory();
+  const { location: { pathname }, push } = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
     const rest = -1;
@@ -20,30 +20,56 @@ const Recipes = () => {
     dispatch(requestCategoriesThunk(query));
   }, []);
 
+  // useEffect(())
+
   const storedRecipeData = useSelector((state) => state.recipeDataReducer.recipeData);
 
-  const renderCards = (recipeDataArray) => {
-    const renderData = recipeDataArray.meals ?? recipeDataArray.drinks;
+  const toRender = useSelector((state) => state
+    .recipeDataReducer.toRender);
+
+  const {
+    recipeData, recipeCategoryData, recipeSearchData,
+  } = useSelector((state) => state
+    .recipeDataReducer);
+
+  const handleSingleElement = (data) => {
+    const hasOnlyOneElement = data.length === 1;
+    const id = data[0].idDrink || data[0].idMeal;
+    if (hasOnlyOneElement) { push(`${pathname}/${id}`); }
+  };
+
+  const renderCases = {
+    recipeData,
+    recipeCategoryData,
+    recipeSearchData,
+  };
+
+  const renderCards = () => {
+    const rawDataToRender = renderCases[toRender];
+    const decideFoodOrDrinkData = rawDataToRender.meals || rawDataToRender.drinks;
     const numberOfRecipes = 12;
-    return renderData.slice(0, numberOfRecipes)
-      .map((
-        { strMealThumb, strDrinkThumb, strMeal, strDrink, idMeal, idDrink },
+
+    handleSingleElement(decideFoodOrDrinkData);
+
+    const processedDataToRender = decideFoodOrDrinkData.slice(0, numberOfRecipes);
+    return processedDataToRender.map((
+      { strMealThumb, strDrinkThumb, strMeal, strDrink, idMeal, idDrink },
+      index,
+    ) => {
+      const data = {
+        thumbnail: strMealThumb ?? strDrinkThumb,
+        recipeName: strMeal ?? strDrink,
+        id: idMeal ?? idDrink,
         index,
-      ) => {
-        const data = {
-          thumbnail: strMealThumb ?? strDrinkThumb,
-          recipeName: strMeal ?? strDrink,
-          id: idMeal ?? idDrink,
-          index,
-          pathname,
-        };
-        return (
-          <RecipeCard
-            recipeData={ data }
-            key={ data.index }
-          />
-        );
-      });
+        pathname,
+      };
+      return (
+        <RecipeCard
+          recipeData={ data }
+          key={ data.index }
+        />
+      );
+    });
   };
 
   const storedRecipeCategoryData = useSelector((state) => state
@@ -52,7 +78,6 @@ const Recipes = () => {
   const handleCategoryClick = (category, type) => {
     const isCategoryTrue = !!storedRecipeCategoryData?.meals?.length
     || !!storedRecipeCategoryData?.drinks?.length;
-    console.log(isCategoryTrue);
     if (isCategoryTrue) { dispatch(showAllCategoriesAction()); }
     if (!isCategoryTrue) { dispatch(requestFilteredCategoriesThunk(category, type)); }
   };
@@ -63,6 +88,7 @@ const Recipes = () => {
   const renderCategoryButtons = () => {
     const categories = storedRecipeCategories.meals || storedRecipeCategories.drinks;
     const maxCategories = 5;
+
     const firstFiveCategories = categories.slice(0, maxCategories);
     const response = firstFiveCategories.map((categoryObj) => {
       const type = storedRecipeCategories.meals ? 'food' : 'drink';
@@ -91,9 +117,6 @@ const Recipes = () => {
     || !!storedRecipeCategories?.drinks?.length;
   const areAllFetchesDone = isRecipeFetchDone && isCategoryFetchDone;
 
-  const isCategoryTrue = !!storedRecipeCategoryData?.meals?.length
-  || storedRecipeCategoryData?.drinks?.length;
-
   return (
     <div>
       <Header />
@@ -111,11 +134,7 @@ const Recipes = () => {
               { renderCategoryButtons() }
             </section>
             <main className={ styles['card-container'] }>
-              {
-                isCategoryTrue
-                  ? renderCards(storedRecipeCategoryData)
-                  : renderCards(storedRecipeData)
-              }
+              { renderCards() }
             </main>
           </div>
         )
