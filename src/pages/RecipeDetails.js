@@ -7,6 +7,8 @@ import shareIcon from '../images/shareIcon.svg';
 import RecommendationCard from '../components/RecommendationCard';
 import styles from '../components/Recommendations.module.css';
 
+const copy = require('clipboard-copy');
+
 // http://localhost:3000/drinks/11007
 // http://localhost:3000/foods/52772
 
@@ -18,7 +20,6 @@ const RecipeDetails = (props) => {
   const [ingredients, setIngredients] = useState([]);
   const [measure, setMeasure] = useState([]);
   const history = useHistory();
-  // const copy = require('clipboard-copy');
   const [share, setShare] = useState(false);
   const [heart, setHeart] = useState(false);
   const [recommendation, setRecommendation] = useState([]);
@@ -120,7 +121,7 @@ const RecipeDetails = (props) => {
     getRecipeDetails();
   }, []);
 
-  // const { match: { url } } = props;
+  const { match: { url } } = props;
 
   return (
     <div>
@@ -140,7 +141,7 @@ const RecipeDetails = (props) => {
               data-testid="share-btn"
               src="shareIcon "
               onClick={ () => {
-                // copy(url);
+                copy(url);
                 setShare(true);
               } }
             >
@@ -193,7 +194,7 @@ const RecipeDetails = (props) => {
               data-testid="share-btn"
               src="shareIcon"
               onClick={ () => {
-                // copy(url);
+                copy(url);
                 setShare(true);
               } }
             >
@@ -237,7 +238,7 @@ const RecipeDetails = (props) => {
 
 RecipeDetails.propTypes = {
   match: PropTypes.shape({
-    // url: PropTypes.string,
+    url: PropTypes.string,
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
