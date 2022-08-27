@@ -51,7 +51,6 @@ const RecipeDetails = (props) => {
     ingredientsFF.map((e) => (e !== '' ? (ingredientsList.push(e)) : ('')));
     setMeasure(ingredientsList);
   };
-
   const getFood = async () => {
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`);
     const data = await response.json();
@@ -65,7 +64,6 @@ const RecipeDetails = (props) => {
     const six = 6;
     setRecommendation(newDataRE.splice(0, six));
   };
-
   const getDrink = async () => {
     const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`);
     const data = await response.json();
