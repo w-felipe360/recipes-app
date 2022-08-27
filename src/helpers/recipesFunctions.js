@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const getToken = () => {
   const data = localStorage.getItem('token');
   return data;
@@ -94,11 +96,11 @@ export const heartFunction = (param, recipeid, comida, setheart) => {
   const zz = [{
     id: recipeid,
     type: param,
-    nationality: comida.strArea,
+    nationality: comida.strArea ? comida.strArea : '',
     category: comida.strCategory,
-    alcoholicOrNot: comida.strAlcoholic,
-    name: comida.strMeal,
-    image: comida.strMealThumb,
+    alcoholicOrNot: comida.strAlcoholic ? comida.strAlcoholic : '',
+    name: param === 'food' ? comida.strMeal : comida.strDrink,
+    image: param === 'food' ? comida.strMealThumb : comida.strDrinkThumb,
   }];
   if (fv === null) {
     localStorage.setItem('favoriteRecipes', JSON.stringify(zz));
@@ -118,10 +120,14 @@ export const heartFunction = (param, recipeid, comida, setheart) => {
   }
 };
 
-const tt = 'Meat,Casserole';
+const limit = 32;
 
-console.log(tt.split(','));
+export const youVideo = (param) => <iframe data-testid="video" width="560" height="315" src={ `https://www.youtube.com/embed/${param.strYoutube.substr(limit)}` } title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />;
+// const tt = 'Meat,Casserole';
 
-const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];
+// console.log(tt.split(','));
 
-console.log(hh[0].id);
+// const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];
+// const hh = ['spanhol', 'thales', 'barros'];
+
+// console.log(!!hh.find((e) => e.includes('rros')));
