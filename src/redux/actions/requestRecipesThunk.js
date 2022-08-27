@@ -14,7 +14,6 @@ const requestRecipesThunk = (query) => async (dispatch) => {
     drink: fetch(DRINK_ENDPOINT).then((response) => response.json()),
   };
   const fetchData = await fetchFoodOrDrink[query];
-  console.log(fetchData);
   dispatch(onFetchSuccessAction(fetchData));
 };
 

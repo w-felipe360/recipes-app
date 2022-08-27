@@ -20,13 +20,10 @@ const Recipes = () => {
     dispatch(requestCategoriesThunk(query));
   }, []);
 
-  // useEffect(())
-
   const storedRecipeData = useSelector((state) => state.recipeDataReducer.recipeData);
 
   const toRender = useSelector((state) => state
     .recipeDataReducer.toRender);
-  console.log(toRender);
 
   const {
     recipeData, recipeCategoryData, recipeSearchData,
