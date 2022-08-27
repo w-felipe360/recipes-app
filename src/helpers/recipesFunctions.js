@@ -118,10 +118,5 @@ export const heartFunction = (param, recipeid, comida, setheart) => {
   }
 };
 
-const tt = 'Meat,Casserole';
-
-console.log(tt.split(','));
-
-const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];
-
-console.log(hh[0].id);
+// const tt = 'Meat,Casserole';
+// const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];

@@ -1,46 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import DoneRecipeCard from '../components/DoneRecipeCard';
-import { createLocalStorage, getLocalStorage,
-  setLocalStorage } from '../helpers/localStorage';
-
-const mockedData = [
-  {
-    id: '52771',
-    type: 'food',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-    doneDate: '23/06/2020',
-    tags: ['Pasta', 'Curry'],
-  },
-  {
-    id: '178319',
-    type: 'drink',
-    nationality: '',
-    category: 'Cocktail',
-    alcoholicOrNot: 'Alcoholic',
-    name: 'Aquamarine',
-    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-    doneDate: '23/06/2020',
-    tags: [],
-  },
-];
+import { getLocalStorage } from '../helpers/localStorage';
 
 const DoneRecipes = () => {
   const [noFilter, setNoFilter] = useState([]);
   const [foodFilter, setFoodFilter] = useState([]);
   const [drinkFilter, setDrinkFilter] = useState([]);
   const [whichFilterToApply, setWhichFilterToApply] = useState('noFilter');
-  console.log(global);
+
   useEffect(() => {
-    const getDataOnMount = () => {
-      createLocalStorage('doneRecipes');
-      setLocalStorage('doneRecipes', mockedData);
-      return getLocalStorage('doneRecipes');
-    };
-    const data = getDataOnMount();
+    const data = getLocalStorage('doneRecipes');
     setNoFilter(data);
   }, []);
 
@@ -50,13 +19,13 @@ const DoneRecipes = () => {
   };
 
   const handleFoodFilter = () => {
-    const filteredByFood = mockedData.filter(({ type }) => type === 'food');
+    const filteredByFood = noFilter.filter(({ type }) => type === 'food');
     setFoodFilter(filteredByFood);
     setWhichFilterToApply('food');
   };
 
   const handleDrinkFilter = () => {
-    const filteredByDrink = mockedData.filter(({ type }) => type === 'drink');
+    const filteredByDrink = noFilter.filter(({ type }) => type === 'drink');
     setDrinkFilter(filteredByDrink);
     setWhichFilterToApply('drink');
   };

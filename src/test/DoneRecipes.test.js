@@ -5,7 +5,6 @@ import App from '../App';
 import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
 import doneRecipesMockData from './mocks/doneRecipesMockData';
 import { createLocalStorage, setLocalStorage } from '../helpers/localStorage';
-import DoneRecipes from '../pages/DoneRecipes';
 
 beforeEach(() => {
   createLocalStorage('doneRecipes');
@@ -16,15 +15,16 @@ afterEach(() => {
 });
 
 describe('Testa o componente Recipes', () => {
-  it('Testa se a página de Receitas renderiza as comidas corretamente', async () => {
-    const { history } = renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
+  it('Testa se a página de DoneRecipes renderiza corretamente', async () => {
+    renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
 
     const titles = screen.getAllByRole('heading', { level: 4 });
     expect(titles).toHaveLength(2);
     screen.logTestingPlaygroundURL();
   });
-  it('Testa se a página de Receitas renderiza as comidas corretamente', async () => {
-    const { history } = renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
+  it('Testa se a página de DoneRecipes filtra as receitas corretamente', async () => {
+    renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
+    const titlesStr = '0-horizontal-name';
 
     const filterByAllButton = screen.getByTestId('filter-by-all-btn');
     const filterByFoodButton = screen.getByTestId('filter-by-food-btn');
@@ -32,20 +32,20 @@ describe('Testa o componente Recipes', () => {
 
     userEvent.click(filterByFoodButton);
     const titles = screen.getAllByRole('heading', { level: 4 });
-    const dish = screen.getByTestId('0-horizontal-name');
+    const dish = screen.getByTestId(titlesStr);
     expect(dish).toBeInTheDocument();
 
     userEvent.click(filterByDrinkButton);
     expect(titles).toHaveLength(1);
-    const drink = screen.getByTestId('0-horizontal-name');
+    const drink = screen.getByTestId(titlesStr);
     expect(drink).toBeInTheDocument();
 
     userEvent.click(filterByAllButton);
 
-    const drinkAfterFilter = screen.getByTestId('0-horizontal-name');
+    const drinkAfterFilter = screen.getByTestId(titlesStr);
     expect(drinkAfterFilter).toBeInTheDocument();
 
-    const dishAfterFilter = screen.getByTestId('0-horizontal-name');
+    const dishAfterFilter = screen.getByTestId(titlesStr);
     expect(dishAfterFilter).toBeInTheDocument();
 
     const titlesAfterFilter = screen.getAllByRole('heading', { level: 4 });

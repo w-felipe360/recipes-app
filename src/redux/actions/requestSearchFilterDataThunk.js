@@ -29,7 +29,6 @@ const requestSearchFilterThunk = (
   const response = await fetch(endpoint);
   const data = await response.json();
   const isDataNull = data.meals || data.drinks;
-  console.log(isDataNull);
 
   if (!isDataNull) {
     return global.alert('Sorry, we haven\'t found any recipes for these filters.');
