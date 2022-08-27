@@ -82,7 +82,6 @@ const RecipeInProgress = (props) => {
     if (JSON.parse(localStorage.getItem('doneRecipes')) !== null) {
       const vv = [];
       JSON.parse(localStorage.getItem('doneRecipes')).forEach((e) => vv.push(e.id));
-      console.log(vv);
       setFinalizada(vv);
     }
     if (JSON.parse(localStorage.getItem('favoriteRecipes')) !== null) {

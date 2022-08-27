@@ -123,11 +123,3 @@ export const heartFunction = (param, recipeid, comida, setheart) => {
 const limit = 32;
 
 export const youVideo = (param) => <iframe data-testid="video" width="560" height="315" src={ `https://www.youtube.com/embed/${param.strYoutube.substr(limit)}` } title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />;
-// const tt = 'Meat,Casserole';
-
-// console.log(tt.split(','));
-
-// const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];
-// const hh = ['spanhol', 'thales', 'barros'];
-
-// console.log(!!hh.find((e) => e.includes('rros')));
