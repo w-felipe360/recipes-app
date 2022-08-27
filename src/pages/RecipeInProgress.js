@@ -41,7 +41,7 @@ const RecipeInProgress = (props) => {
     getFood(drinkEnd, getLists, setFood, 'drinks')));
 
   const funcFinishRecipee = () => {
-    funcFinishRecipe(recipeId);
+    funcFinishRecipe(recipeId, food);
     history.push('/done-recipes');
   };
 
@@ -80,7 +80,10 @@ const RecipeInProgress = (props) => {
       setCheck(JSON.parse(localStorage.getItem('inProgressRecipes')));
     }
     if (JSON.parse(localStorage.getItem('doneRecipes')) !== null) {
-      setFinalizada(JSON.parse(localStorage.getItem('doneRecipes')));
+      const vv = [];
+      JSON.parse(localStorage.getItem('doneRecipes')).forEach((e) => vv.push(e.id));
+      console.log(vv);
+      setFinalizada(vv);
     }
     if (JSON.parse(localStorage.getItem('favoriteRecipes')) !== null) {
       const aa = [];
@@ -108,7 +111,7 @@ const RecipeInProgress = (props) => {
       data-testid="share-btn"
       src={ shareIcon }
       onClick={ () => {
-        clipboardCopy(match.url);
+        clipboardCopy(`${'http://localhost:3000'}${match.url}`);
         setShare(true);
       } }
     >

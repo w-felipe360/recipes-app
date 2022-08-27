@@ -45,14 +45,25 @@ export const getLists = (param1, param2, param3) => {
 //   setfood(data[type][0]);
 // };
 
-export const funcFinishRecipe = (recipeid) => {
+export const funcFinishRecipe = (recipeid, comida) => {
+  const data = new Date();
+  const formattedData = new Intl.DateTimeFormat('pt-BR').format(data);
+  const zz = {
+    id: recipeid,
+    type: comida.strMeal ? 'food' : 'drink',
+    nationality: comida.strArea,
+    category: comida.strCategory,
+    alcoholicOrNot: comida.strAlcoholic ? comida.strAlcoholic : '',
+    name: comida.strMeal,
+    image: comida.strMealThumb,
+    doneDate: formattedData,
+    tags: comida.strTags === [] ? [] : comida.strTags.split(','),
+  };
   const fazendo = JSON.parse(localStorage.getItem('doneRecipes'));
-  if (fazendo !== null && !fazendo.includes(recipeid)) {
-    fazendo.push(recipeid);
-    localStorage.setItem('doneRecipes', JSON.stringify(fazendo));
+  if (fazendo !== null && !fazendo.find((e) => e.id === recipeid)) {
+    localStorage.setItem('doneRecipes', JSON.stringify([...fazendo, zz]));
   } else if (fazendo === null) {
-    const dd = [recipeid];
-    localStorage.setItem('doneRecipes', JSON.stringify(dd));
+    localStorage.setItem('doneRecipes', JSON.stringify([zz]));
   }
 };
 
@@ -106,3 +117,11 @@ export const heartFunction = (param, recipeid, comida, setheart) => {
     }
   }
 };
+
+const tt = 'Meat,Casserole';
+
+console.log(tt.split(','));
+
+const hh = [{ id: 'spanhol' }, { id: 'thales' }, { id: 'barros' }];
+
+console.log(hh[0].id);
