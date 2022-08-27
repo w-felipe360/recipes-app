@@ -1,31 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DoneRecipeCard from '../components/DoneRecipeCard';
+import Header from '../components/Header';
 import { getLocalStorage } from '../helpers/localStorage';
-
-// const mockedData = [
-//   {
-//     id: '52771',
-//     type: 'food',
-//     nationality: 'Italian',
-//     category: 'Vegetarian',
-//     alcoholicOrNot: '',
-//     name: 'Spicy Arrabiata Penne',
-//     image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-//     doneDate: '23/06/2020',
-//     tags: ['Pasta', 'Curry'],
-//   },
-//   {
-//     id: '178319',
-//     type: 'drink',
-//     nationality: '',
-//     category: 'Cocktail',
-//     alcoholicOrNot: 'Alcoholic',
-//     name: 'Aquamarine',
-//     image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-//     doneDate: '23/06/2020',
-//     tags: [],
-//   },
-// ];
 
 const DoneRecipes = () => {
   const [noFilter, setNoFilter] = useState([]);
@@ -62,7 +38,7 @@ const DoneRecipes = () => {
   };
 
   const renderDoneRecipeCards = () => (
-    dataToRender[whichFilterToApply].map((recipeData, index) => (
+    dataToRender[whichFilterToApply]?.map((recipeData, index) => (
       <DoneRecipeCard
         data={ recipeData }
         key={ recipeData.id }
@@ -72,6 +48,7 @@ const DoneRecipes = () => {
 
   return (
     <div>
+      <Header />
       <fieldset>
         <legend>Filtros</legend>
         <button
