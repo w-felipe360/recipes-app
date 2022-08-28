@@ -10,7 +10,6 @@ const FavoriteRecipes = () => {
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem('favoriteRecipes')) || [{ id: 52977, type: 'food', nationality: 'Turkish', category: 'Side', alcoholicOrNot: 'Non alcoholic', name: 'Corba', image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg' }];
     setRecipes(data);
-    console.log(data);
   }, []);
 
   const { clipboard } = navigator;

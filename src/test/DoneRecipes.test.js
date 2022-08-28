@@ -20,7 +20,6 @@ describe('Testa o componente Recipes', () => {
 
     const titles = screen.getAllByRole('heading', { level: 4 });
     expect(titles).toHaveLength(2);
-    screen.logTestingPlaygroundURL();
   });
   it('Testa se a página de DoneRecipes filtra as receitas corretamente', async () => {
     renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
@@ -50,6 +49,5 @@ describe('Testa o componente Recipes', () => {
 
     const titlesAfterFilter = screen.getAllByRole('heading', { level: 4 });
     expect(titlesAfterFilter).toHaveLength(2);
-    screen.logTestingPlaygroundURL();
   });
 });
