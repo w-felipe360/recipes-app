@@ -56,10 +56,10 @@ export const funcFinishRecipe = (recipeid, comida) => {
     nationality: comida.strArea,
     category: comida.strCategory,
     alcoholicOrNot: comida.strAlcoholic ? comida.strAlcoholic : '',
-    name: comida.strMeal,
-    image: comida.strMealThumb,
+    name: comida.strMeal ? comida.strMeal : comida.strDrink,
+    image: comida.strMealThumb ? comida.strMealThumb : comida.strDrinkThumb,
     doneDate: formattedData,
-    tags: comida.strTags === [] ? [] : comida.strTags.split(','),
+    tags: comida.strTags === null ? [] : comida.strTags.split(','),
   };
   const fazendo = JSON.parse(localStorage.getItem('doneRecipes'));
   if (fazendo !== null && !fazendo.find((e) => e.id === recipeid)) {
