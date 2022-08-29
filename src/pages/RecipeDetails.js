@@ -36,7 +36,7 @@ const RecipeDetails = (props) => {
       const dataRE = await responseRE.json();
       const newDataRE = dataRE.drinks;
       const six = 6;
-      setRecommendation(newDataRE.splice(0, six));
+      setRecommendation(newDataRE.slice(0, six));
     } else {
       const response = await fetch(endpoint);
       const data = await response.json();
@@ -47,7 +47,7 @@ const RecipeDetails = (props) => {
       const dataRE = await responseRE.json();
       const newDataRE = dataRE.meals;
       const six = 6;
-      setRecommendation(newDataRE.splice(0, six));
+      setRecommendation(newDataRE.slice(0, six));
     }
   };
 
