@@ -4,3 +4,10 @@
   overflow: auto;
   width: 500px;
 }
+
+.container {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+}

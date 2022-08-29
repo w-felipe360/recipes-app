@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styles from './RecipeCard.module.css';
 
 function RecipeCard({ recipeData: { index, thumbnail, recipeName, id, pathname } }) {
-  console.log();
   return (
     <div
       data-testid={ `${index}-recipe-card` }
