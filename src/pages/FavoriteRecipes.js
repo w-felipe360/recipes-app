@@ -1,39 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import FavoriteRecipeCard from '../components/FavoriteRecipeCard';
 import Header from '../components/Header';
-import { createLocalStorage, getLocalStorage,
-  setLocalStorage } from '../helpers/localStorage';
+import { getLocalStorage } from '../helpers/localStorage';
 
-const favoriteRecipes = [
-  {
-    id: '52771',
-    type: 'food',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-  },
-  {
-    id: '178319',
-    type: 'drink',
-    nationality: '',
-    category: 'Cocktail',
-    alcoholicOrNot: 'Alcoholic',
-    name: 'Aquamarine',
-    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-  },
-];
-
-const DoneRecipes = () => {
+const FavoriteRecipes = () => {
   const [noFilter, setNoFilter] = useState([]);
   const [foodFilter, setFoodFilter] = useState([]);
   const [drinkFilter, setDrinkFilter] = useState([]);
   const [whichFilterToApply, setWhichFilterToApply] = useState('noFilter');
 
   useEffect(() => {
-    createLocalStorage();
-    setLocalStorage('favoriteRecipes', favoriteRecipes);
     const data = getLocalStorage('favoriteRecipes');
     setNoFilter(data);
   }, []);
@@ -67,6 +43,7 @@ const DoneRecipes = () => {
         data={ recipeData }
         key={ recipeData.id }
         index={ index }
+        filterData={ { setNoFilter, setFoodFilter, setDrinkFilter, whichFilterToApply } }
       />
     )));
 
@@ -104,4 +81,4 @@ const DoneRecipes = () => {
   );
 };
 
-export default DoneRecipes;
+export default FavoriteRecipes;

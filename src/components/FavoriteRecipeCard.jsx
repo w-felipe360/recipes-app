@@ -5,37 +5,47 @@ import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import styles from './DoneRecipeCard.module.css';
 import favoriteIcon from '../images/blackHeartIcon.svg';
+import { removeFavoriteRecipe } from '../helpers/localStorage';
 
-function FavoriteRecipeCard({ data, index }) {
+function FavoriteRecipeCard({ data, index, filterData }) {
   const [isCopied, setIsCopied] = useState(false);
-  const {
-    id, type, nationality, category, alcoholicOrNot, name, image, doneDate, tags,
-  } = data;
+  const { id, type, nationality, category, alcoholicOrNot, name, image } = data;
 
   const hrefToDetails = () => {
     const { origin } = window.location;
     return `${origin}/${type}s/${id}`;
   };
 
-  const renderTags = () => {
-    if (tags.length === 1) {
-      return <span data-testid={ `${index}-${tags}-horizontal-tag` }>{tags}</span>;
-    }
-    if (tags.length === 2) {
-      return tags.map((tag) => (
-        <span data-testid={ `${index}-${tag}-horizontal-tag` } key={ tag }>{tag}</span>
-      ));
-    }
-    const tagsToRender = tags.slice(0, 2);
-    return tagsToRender.map((tag) => (
-      <span data-testid={ `${index}-${tag}-horizontal-tag` } key={ tag }>{tag}</span>
-    ));
-  };
-
   const handleCopyClick = () => {
     setIsCopied(true);
     const contentToCopy = hrefToDetails();
     clipboardCopy(contentToCopy);
+  };
+
+  const handleFoodFilter = () => {
+    const { setFoodFilter, setNoFilter } = filterData;
+    const updatedData = removeFavoriteRecipe(id);
+    const updatedFilteredData = updatedData
+      .filter((localStorageData) => localStorageData.type === 'food');
+    setFoodFilter(updatedFilteredData);
+    setNoFilter(updatedData);
+  };
+
+  const handleDrinkFilter = () => {
+    const { setDrinkFilter, setNoFilter } = filterData;
+    const updatedData = removeFavoriteRecipe(id);
+    const updatedFilteredData = updatedData
+      .filter((localStorageData) => localStorageData.type === 'drink');
+    setDrinkFilter(updatedFilteredData);
+    setNoFilter(updatedData);
+  };
+
+  const handleRemoveFavoriteClick = () => {
+    const { setNoFilter, whichFilterToApply } = filterData;
+    const updatedData = removeFavoriteRecipe(id);
+    if (whichFilterToApply === 'noFilter') { setNoFilter(updatedData); }
+    if (whichFilterToApply === 'food') { handleFoodFilter(); }
+    if (whichFilterToApply === 'drink') { handleDrinkFilter(); }
   };
 
   const topText = `${alcoholicOrNot || nationality} - ${category}`;
@@ -55,27 +65,33 @@ function FavoriteRecipeCard({ data, index }) {
           <h5 data-testid={ `${index}-horizontal-top-text` }>
             { topText }
           </h5>
-          { isCopied && <span>Link copied!</span> }
-          <button
-            type="button"
-            onClick={ () => handleCopyClick() }
-          >
-            <img
-              alt="shareButton"
-              src={ shareIcon }
-              data-testid={ `${index}-horizontal-share-btn` }
-            />
-          </button>
         </div>
         <Link to={ `/${type}s/${id}` }>
           <h4 data-testid={ `${index}-horizontal-name` }>
             { name }
           </h4>
         </Link>
-        <h5 data-testid={ `${index}-horizontal-done-date` }>
-          { `Done in: ${doneDate}` }
-        </h5>
-        { tags.length && renderTags() }
+        { isCopied && <span>Link copied!</span> }
+        <button
+          type="button"
+          onClick={ () => handleCopyClick() }
+        >
+          <img
+            alt="shareButton"
+            src={ shareIcon }
+            data-testid={ `${index}-horizontal-share-btn` }
+          />
+        </button>
+        <button
+          type="button"
+          onClick={ () => handleRemoveFavoriteClick() }
+        >
+          <img
+            alt="favorite button"
+            src={ favoriteIcon }
+            data-testid={ `${index}-horizontal-favorite-btn` }
+          />
+        </button>
       </div>
     </div>
   );
@@ -90,10 +106,14 @@ FavoriteRecipeCard.propTypes = {
     alcoholicOrNot: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    doneDate: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
+  filterData: PropTypes.shape({
+    setNoFilter: PropTypes.func.isRequired,
+    setFoodFilter: PropTypes.func.isRequired,
+    setDrinkFilter: PropTypes.func.isRequired,
+    whichFilterToApply: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default FavoriteRecipeCard;
