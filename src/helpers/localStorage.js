@@ -16,3 +16,11 @@ export const getToken = () => {
   const data = localStorage.getItem('token');
   return data;
 };
+
+export const removeFavoriteRecipe = (id) => {
+  createLocalStorage();
+  const data = getLocalStorage('favoriteRecipes');
+  const filteredData = data.filter((favoriteRecipe) => favoriteRecipe.id !== id);
+  setLocalStorage('favoriteRecipes', filteredData);
+  return (filteredData);
+};
