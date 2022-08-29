@@ -1,138 +1,107 @@
 import React, { useEffect, useState } from 'react';
+import FavoriteRecipeCard from '../components/FavoriteRecipeCard';
 import Header from '../components/Header';
-import favoriteIcon from '../images/blackHeartIcon.svg';
-// import shareIcon from '../images/shareIcon.svg';
-import shareIcon from '../images/shareIcon.svg';
+import { createLocalStorage, getLocalStorage,
+  setLocalStorage } from '../helpers/localStorage';
 
-const FavoriteRecipes = () => {
-  const [recipes, setRecipes] = useState([]);
+const favoriteRecipes = [
+  {
+    id: '52771',
+    type: 'food',
+    nationality: 'Italian',
+    category: 'Vegetarian',
+    alcoholicOrNot: '',
+    name: 'Spicy Arrabiata Penne',
+    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
+  },
+  {
+    id: '178319',
+    type: 'drink',
+    nationality: '',
+    category: 'Cocktail',
+    alcoholicOrNot: 'Alcoholic',
+    name: 'Aquamarine',
+    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
+  },
+];
+
+const DoneRecipes = () => {
+  const [noFilter, setNoFilter] = useState([]);
+  const [foodFilter, setFoodFilter] = useState([]);
+  const [drinkFilter, setDrinkFilter] = useState([]);
+  const [whichFilterToApply, setWhichFilterToApply] = useState('noFilter');
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('favoriteRecipes')) || [{ id: 52977, type: 'food', nationality: 'Turkish', category: 'Side', alcoholicOrNot: 'Non alcoholic', name: 'Corba', image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg' }];
-    setRecipes(data);
+    createLocalStorage();
+    setLocalStorage('favoriteRecipes', favoriteRecipes);
+    const data = getLocalStorage('favoriteRecipes');
+    setNoFilter(data);
   }, []);
 
-  const { clipboard } = navigator;
-
-  const showMessage = ({ target }) => {
-    const span = target.parentNode.nextElementSibling.nextElementSibling;
-    span.innerHTML = 'Link copied!';
-    setTimeout(() => {
-      span.innerHTML = '';
-    }, +'2000');
+  const handleNoFilter = () => {
+    setFoodFilter(noFilter);
+    setWhichFilterToApply('noFilter');
   };
+
+  const handleFoodFilter = () => {
+    const filteredByFood = noFilter.filter(({ type }) => type === 'food');
+    setFoodFilter(filteredByFood);
+    setWhichFilterToApply('food');
+  };
+
+  const handleDrinkFilter = () => {
+    const filteredByDrink = noFilter.filter(({ type }) => type === 'drink');
+    setDrinkFilter(filteredByDrink);
+    setWhichFilterToApply('drink');
+  };
+
+  const dataToRender = {
+    noFilter,
+    food: foodFilter,
+    drink: drinkFilter,
+  };
+
+  const renderFavoriteRecipeCards = () => (
+    dataToRender[whichFilterToApply]?.map((recipeData, index) => (
+      <FavoriteRecipeCard
+        data={ recipeData }
+        key={ recipeData.id }
+        index={ index }
+      />
+    )));
 
   return (
     <div>
       <Header />
-      <section>
+      <fieldset>
+        <legend>Filtros</legend>
         <button
           type="button"
           data-testid="filter-by-all-btn"
+          onClick={ () => handleNoFilter() }
         >
           All
         </button>
         <button
           type="button"
           data-testid="filter-by-food-btn"
+          onClick={ () => handleFoodFilter() }
         >
           Food
         </button>
         <button
           type="button"
           data-testid="filter-by-drink-btn"
+          onClick={ () => handleDrinkFilter() }
         >
           Drink
         </button>
-      </section>
-      <section>
-        {
-          recipes.map((recipe, index) => (
-            recipe.type === 'food' ? (
-              <section key={ index }>
-                <img
-                  src={ recipe.image }
-                  alt={ `Imagem da comida ${recipe.name}` }
-                  data-testid={ `${index}-horizontal-image` }
-                />
-                <h2 data-testid={ `${index}-horizontal-name` }>
-                  { recipe.name }
-                </h2>
-                <p>
-                  { recipe.category }
-                </p>
-                <p data-testid={ `${index}-horizontal-top-text` }>
-                  { `${recipe.nationality} - ${recipe.category}` }
-                </p>
-                <button
-                  type="button"
-                  onClick={ (event) => {
-                    clipboard.writeText(`http://localhost:3000/foods/${recipe.id}`);
-                    showMessage(event);
-                  } }
-                >
-                  <img
-                    src={ shareIcon }
-                    alt="Imagem de compartilhar"
-                    data-testid={ `${index}-horizontal-share-btn` }
-                  />
-                </button>
-                <button type="button">
-                  <img
-                    src={ favoriteIcon }
-                    alt="Imagem de favoritar"
-                    data-testid={ `${index}-horizontal-favorite-btn` }
-                  />
-                </button>
-                <span>{}</span>
-              </section>
-            ) : (
-              <section key={ index }>
-                <img
-                  src={ recipe.image }
-                  alt={ `Imagem da comida ${recipe.name}` }
-                  data-testid={ `${index}-horizontal-image` }
-                />
-                <h2 data-testid={ `${index}-horizontal-name` }>
-                  { recipe.name }
-                </h2>
-                <p>
-                  { recipe.category }
-                </p>
-                <p>
-                  { `${recipe.nationality} - ${recipe.category}` }
-                </p>
-                <p data-testid={ `${index}-horizontal-top-text` }>
-                  { recipe.alcoholicOrNot }
-                </p>
-                <button
-                  type="button"
-                  onClick={ (event) => {
-                    clipboard.writeText(`http://localhost:3000/drinks/${recipe.id}`);
-                    showMessage(event);
-                  } }
-                >
-                  <img
-                    src={ shareIcon }
-                    alt="Imagem de compartilhar"
-                    data-testid={ `${index}-horizontal-share-btn` }
-                  />
-                </button>
-                <button type="button">
-                  <img
-                    src={ favoriteIcon }
-                    alt="Imagem de favoritar"
-                    data-testid={ `${index}-horizontal-favorite-btn` }
-                  />
-                </button>
-                <span>{}</span>
-              </section>
-            )))
-        }
-      </section>
-      <span>{}</span>
+      </fieldset>
+      <main>
+        { renderFavoriteRecipeCards() }
+      </main>
     </div>
   );
 };
 
-export default FavoriteRecipes;
+export default DoneRecipes;
