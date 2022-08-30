@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -13,6 +13,7 @@ import styles from '../components/Recommendations.module.css';
 // http://localhost:3000/foods/52772
 
 const RecipeDetails = (props) => {
+  const { url } = useRouteMatch();
   const { match } = props;
   const recipeId = match.params.id;
   const [food, setFood] = useState('');
@@ -24,6 +25,11 @@ const RecipeDetails = (props) => {
   const [check, setCheck] = useState([]);
   const [finalizada, setFinalizada] = useState([]);
   const [recommendation, setRecommendation] = useState([]);
+
+  const onShareClick = () => {
+    clipboardCopy(`${window.origin}${url}`);
+    setShare(true);
+  };
 
   const getFood = async (endpoint, getlists, setfood, type) => {
     if (type === 'meals') {
@@ -109,10 +115,7 @@ const RecipeDetails = (props) => {
       type="button"
       data-testid="share-btn"
       src={ shareIcon }
-      onClick={ () => {
-        clipboardCopy(`${'http://localhost:3000'}${match.url}`);
-        setShare(true);
-      } }
+      onClick={ () => onShareClick() }
     >
       <img src={ shareIcon } alt="share-icon" />
     </button>

@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import styles from './Recommendations.module.css';
 // import PropTypes from 'prop-types';
 
 function RecommendationCard({ data, recipe, testidCard, testidTitle }) {
 //   console.log(key);
   return (
-    <div>
+    <div className={ styles['card-container'] }>
       {recipe === 'food' ? (
         <div data-testid={ testidCard }>
           <img
