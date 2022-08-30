@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -13,6 +13,9 @@ import { disableButton, lineText, getLists,
 // http://localhost:3000/foods/52772/in-progress
 
 const RecipeInProgress = (props) => {
+  const { url } = useRouteMatch();
+  const maxUrlBreakpoints = 3;
+  const fixedurl = url.split('/').slice(1, maxUrlBreakpoints).join('/');
   const { match } = props;
   const recipeId = match.params.id;
   const [food, setFood] = useState('');
@@ -24,6 +27,12 @@ const RecipeInProgress = (props) => {
   const [disable, setDisable] = useState(true);
   const [check, setCheck] = useState([]);
   const [finalizada, setFinalizada] = useState([]);
+
+  const onShareClick = () => {
+    const content = `${window.origin}/${fixedurl}`;
+    clipboardCopy(content);
+    setShare(true);
+  };
 
   const getFood = async (endpoint, getlists, setfood, type) => {
     const response = await fetch(endpoint);
@@ -109,10 +118,7 @@ const RecipeInProgress = (props) => {
       type="button"
       data-testid="share-btn"
       src={ shareIcon }
-      onClick={ () => {
-        clipboardCopy(`${'http://localhost:3000'}${match.url}`);
-        setShare(true);
-      } }
+      onClick={ () => onShareClick() }
     >
       <img src={ shareIcon } alt="share-icon" />
     </button>
