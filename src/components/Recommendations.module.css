@@ -1,8 +1,12 @@
 .recommendation {
   display: flex;
   height: 250px;
-  overflow: auto;
-  width: 500px;
+  overflow-x: scroll;
+  width: 360px;
+}
+
+.card-container {
+  width: 180;
 }
 
 .container {
