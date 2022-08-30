@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
-import { useRouteMatch } from 'react-router-dom';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
@@ -14,7 +13,7 @@ import styles from '../components/Recommendations.module.css';
 // http://localhost:3000/foods/52772
 
 const RecipeDetails = (props) => {
-  const { url, params: { id } } = useRouteMatch();
+  const { url } = useRouteMatch();
   const { match } = props;
   const recipeId = match.params.id;
   const [food, setFood] = useState('');
