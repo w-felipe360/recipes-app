@@ -94,40 +94,23 @@ const RecipeDetails2 = () => {
   }, []);
 
   const renderIngredients = () => {
-    const getProperties = (minIndex, maxIndex) => Object
-      .values(recipeData).slice(minIndex, maxIndex).filter(Boolean);
-
-    const minFoodIngredient = 9;
-    const maxFoodIngredient = 29;
-    const minDrinkIngredient = 17;
-    const maxDrinkIngredient = 32;
-
-    const minFoodMeasure = 29;
-    const maxFoodMeasure = 49;
-    const minDrinkMeasure = 32;
-    const maxDrinkMeasure = 47;
-
-    const ingredients = isMeal
-      ? getProperties(minFoodIngredient, maxFoodIngredient)
-      : getProperties(minDrinkIngredient, maxDrinkIngredient);
-
-    const measures = isMeal
-      ? getProperties(minFoodMeasure, maxFoodMeasure)
-      : getProperties(minDrinkMeasure, maxDrinkMeasure);
-
-    console.log(ingredients);
-    console.log(measures);
+    const ingredients = Object.keys(recipeData)
+      .filter((ingredientItem) => ingredientItem.includes('strIngredient'));
+    const measures = Object.keys(recipeData)
+      .filter((measureItem) => measureItem.includes('strMeasure'));
 
     const ingredientsArray = ingredients
       .map((ingredient, index) => {
-        const measure = measures[index] ? ` - ${measures[index]}` : '';
-        console.log(recipeData);
+        const measure = recipeData[measures[index]]
+          ? ` - ${recipeData[measures[index]]}`
+          : '';
+
         return (
           <li
             key={ ingredient }
             data-testid={ `${index}-ingredient-name-and-measure` }
           >
-            {`${ingredient}${measure}`}
+            {`${recipeData[ingredient]}${measure}`}
           </li>
         );
       });
