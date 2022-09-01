@@ -3,29 +3,59 @@ import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import ggDrink from './mocks/ggDrink';
+import { addFavoriteRecipe, createLocalStorage, setLocalStorage } from '../helpers/localStorage';
+import doneDrink from './mocks/doneDrink';
 
 beforeEach(() => {
   jest.spyOn(global, 'fetch')
     .mockImplementationOnce(fetch);
 });
-afterEach(() => {
-  jest.resetAllMocks();
-});
+
+const favoriteButtonStr = 'favorite-btn';
 
 describe('Testa o componente Recipes', () => {
   it('Testa se a página de DoneRecipes renderiza corretamente', async () => {
-    renderWithRouterAndRedux(<App />, undefined, '/drinks/15997');
+    createLocalStorage('favoriteRecipes');
+    setLocalStorage('favoriteRecipes', ggDrink);
+    // addFavoriteRecipe(ggDrink)
+    window.document.execCommand = jest.fn(() => true);
+    const { history } = renderWithRouterAndRedux(<App />, undefined, '/drinks/15997');
     await waitForElementToBeRemoved(() => screen.getByText(/Loading.../i));
-    screen.logTestingPlaygroundURL();
 
-    const shareBtn = screen.getByTestId('share-btn');
-    userEvent.click(shareBtn);
-    expect(shareBtn).toBeInTheDocument();
+    const shareButton = screen.getByTestId('share-btn');
+    userEvent.click(shareButton);
+    expect(shareButton).toBeInTheDocument();
     const linkCopiedText = screen.getByText(/link copied!/i);
     expect(linkCopiedText).toBeInTheDocument();
 
-    screen.logTestingPlaygroundURL();
-    // const titles = screen.getAllByRole('heading', { level: 4 });
-    // expect(titles).toHaveLength(2);
+    const favoriteButton = screen.getByTestId(favoriteButtonStr);
+    expect(favoriteButton).toBeInTheDocument();
+    expect(favoriteButton).toHaveAttribute('src', blackHeartIcon);
+    userEvent.click(favoriteButton);
+    const favoriteButtonAfterClick = screen.getByTestId(favoriteButtonStr);
+    expect(favoriteButtonAfterClick).toHaveAttribute('src', whiteHeartIcon);
+    userEvent.click(favoriteButtonAfterClick);
+
+    const startRecipe = screen.getByTestId('start-recipe-btn');
+    userEvent.click(startRecipe);
+
+    expect(history.location.pathname).toBe('/drinks/15997/in-progress');
   });
+  // it('Testa se a página de DoneRecipes renderiza corretamente', async () => {
+  //   createLocalStorage('doneRecipes');
+  //   setLocalStorage('doneRecipes', doneDrink);
+  //   renderWithRouterAndRedux(<App />, undefined, '/drinks/15997');
+  //   await waitForElementToBeRemoved(() => screen.getByText(/Loading.../i));
+
+  //   const favoriteButton = screen.getByTestId(favoriteButtonStr);
+  //   expect(favoriteButton).toBeInTheDocument();
+  //   expect(favoriteButton).toHaveAttribute('src', blackHeartIcon);
+  //   userEvent.click(favoriteButton);
+  //   const favoriteButtonAfterClick = screen.getByTestId(favoriteButtonStr);
+  //   expect(favoriteButtonAfterClick).toHaveAttribute('src', whiteHeartIcon);
+  //   userEvent.click(favoriteButtonAfterClick);
+  // });
 });

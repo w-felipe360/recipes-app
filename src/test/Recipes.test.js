@@ -60,7 +60,6 @@ describe('Testa o componente Recipes', () => {
       userEvent.click(allCategoryButton);
       await screen.findByTestId(THIRD_CARD);
 
-      screen.logTestingPlaygroundURL();
       const firstCardName = screen.getByTestId(FIRST_CARD_NAME);
       expect(firstCardName).toBeInTheDocument();
 
@@ -85,7 +84,6 @@ describe('Testa o componente Recipes', () => {
       userEvent.click(allCategoryButton);
       await screen.findByTestId(THIRD_CARD);
 
-      screen.logTestingPlaygroundURL();
       const firstCardName = screen.getByTestId(FIRST_CARD_NAME);
       expect(firstCardName).toBeInTheDocument();
 

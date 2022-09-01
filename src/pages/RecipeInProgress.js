@@ -73,24 +73,24 @@ const RecipeInProgress = () => {
     </div>
   ));
 
-  useEffect(() => {
-    getRecipeDet();
-    if (JSON.parse(localStorage.getItem('inProgressRecipes')) !== null) {
-      setCheck(JSON.parse(localStorage.getItem('inProgressRecipes')));
-    }
-    if (JSON.parse(localStorage.getItem('doneRecipes')) !== null) {
-      const vv = [];
-      JSON.parse(localStorage.getItem('doneRecipes')).forEach((e) => vv.push(e.id));
-      setFinalizada(vv);
-    }
-    if (JSON.parse(localStorage.getItem('favoriteRecipes')) !== null) {
-      const aa = [];
-      JSON.parse(localStorage.getItem('favoriteRecipes')).map((e) => aa.push(e.id));
-      if (aa.includes(recipeId)) {
-        setHeart(true);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   getRecipeDet();
+  //   if (JSON.parse(localStorage.getItem('inProgressRecipes')) !== null) {
+  //     setCheck(JSON.parse(localStorage.getItem('inProgressRecipes')));
+  //   }
+  //   if (JSON.parse(localStorage.getItem('doneRecipes')) !== null) {
+  //     const vv = [];
+  //     JSON.parse(localStorage.getItem('doneRecipes')).forEach((e) => vv.push(e.id));
+  //     setFinalizada(vv);
+  //   }
+  //   if (JSON.parse(localStorage.getItem('favoriteRecipes')) !== null) {
+  //     const aa = [];
+  //     JSON.parse(localStorage.getItem('favoriteRecipes')).map((e) => aa.push(e.id));
+  //     if (aa.includes(recipeId)) {
+  //       setHeart(true);
+  //     }
+  //   }
+  // }, []);
 
   const btnFinish = (
     <button

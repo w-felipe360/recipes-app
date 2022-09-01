@@ -4,7 +4,7 @@ import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-import RecommendationCard from '../components/RecommendationCard';
+import RecommendationCard from '../components/RecommendationCard2';
 import { addFavoriteRecipe, createLocalStorage, getLocalStorage,
   removeFavoriteRecipe } from '../helpers/localStorage';
 import styles from './RecipeDetails.module.css';
