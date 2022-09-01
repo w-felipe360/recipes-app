@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -12,13 +11,13 @@ import { disableButton, lineText, getLists,
 // http://localhost:3000/drinks/11007/in-progress
 // http://localhost:3000/foods/52772/in-progress
 
-const RecipeInProgress = (props) => {
-  const { match } = props;
-  const recipeId = match.params.id;
+const RecipeInProgress = () => {
+  const { url, params: { id } } = useRouteMatch();
+  const { push, location: { pathname } } = useHistory();
+  const recipeId = id;
   const [food, setFood] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [measure, setMeasure] = useState([]);
-  const history = useHistory();
   const [share, setShare] = useState(false);
   const [heart, setHeart] = useState(false);
   const [disable, setDisable] = useState(true);
@@ -36,13 +35,13 @@ const RecipeInProgress = (props) => {
   const mealsEnd = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
   const drinkEnd = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
 
-  const getRecipeDet = () => (match.path.includes('food') ? (
+  const getRecipeDet = () => (pathname.includes('food') ? (
     getFood(mealsEnd, getLists, setFood, 'meals')) : (
     getFood(drinkEnd, getLists, setFood, 'drinks')));
 
   const funcFinishRecipee = () => {
     funcFinishRecipe(recipeId, food);
-    history.push('/done-recipes');
+    push('/done-recipes');
   };
 
   const lineTexttt = async (param2) => {
@@ -110,7 +109,7 @@ const RecipeInProgress = (props) => {
       data-testid="share-btn"
       src={ shareIcon }
       onClick={ () => {
-        clipboardCopy(`${'http://localhost:3000'}${match.url}`);
+        clipboardCopy(`${'http://localhost:3000'}${url}`);
         setShare(true);
       } }
     >
@@ -145,7 +144,7 @@ const RecipeInProgress = (props) => {
   return (
     <div>
       {
-        match.path.includes('food') && food ? (
+        pathname.includes('food') && food ? (
           <div>
             {thumb('strMealThumb', 'strMeal')}
             <br />
@@ -179,18 +178,6 @@ const RecipeInProgress = (props) => {
       }
     </div>
   );
-};
-
-RecipeInProgress.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string,
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-    path: PropTypes.shape({
-      includes: PropTypes.func,
-    }),
-  }).isRequired,
 };
 
 export default RecipeInProgress;

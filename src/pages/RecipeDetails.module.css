@@ -4,3 +4,10 @@
   position: fixed;
   width: 100%;
 }
+
+.recommendation-container {
+  display: flex;
+  height: 250px;
+  overflow: auto;
+  width: 360px;
+}

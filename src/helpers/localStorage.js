@@ -1,6 +1,6 @@
-export const createLocalStorage = (key) => {
+export const createLocalStorage = (key, initialState = []) => {
   if (!JSON.parse(localStorage.getItem(key))) {
-    localStorage.setItem(key, JSON.stringify([]));
+    localStorage.setItem(key, JSON.stringify(initialState));
   }
 };
 

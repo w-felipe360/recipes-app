@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function RecommendationCard2({ data, index }) {
+function RecommendationCard({ data, index }) {
   const alcoholicOrNot = data.strAlcoholic || data.strArea;
   const thumb = data.strMealThumb || data.strDrinkThumb;
   const name = data.strMeal || data.strDrink;
@@ -19,7 +19,7 @@ function RecommendationCard2({ data, index }) {
   );
 }
 
-RecommendationCard2.propTypes = {
+RecommendationCard.propTypes = {
   data: PropTypes.shape({
     strAlcoholic: PropTypes.string,
     strCategory: PropTypes.string,
@@ -32,4 +32,4 @@ RecommendationCard2.propTypes = {
   index: PropTypes.number.isRequired,
 };
 
-export default RecommendationCard2;
+export default RecommendationCard;
