@@ -8,7 +8,45 @@ import { addRecipeInProgressToStorage, addToLocalStorage,
   createLocalStorage, getLocalStorage,
   removeFavoriteRecipe } from '../helpers/localStorage';
 import styles from '../components/ProgressList.module.css';
+<<<<<<< HEAD
 import Input from '../components/Input';
+=======
+import { disableButton, lineText, getLists,
+  funcFinishRecipe, heartFunction } from '../helpers/recipesFunctions';
+
+// http://localhost:3000/drinks/11007/in-progress
+// http://localhost:3000/foods/52772/in-progress
+
+const RecipeInProgress = (props) => {
+  const { url } = useRouteMatch();
+  const maxUrlBreakpoints = 3;
+  const fixedurl = url.split('/').slice(1, maxUrlBreakpoints).join('/');
+  const { match } = props;
+  const recipeId = match.params.id;
+  const [food, setFood] = useState('');
+  const [ingredients, setIngredients] = useState([]);
+  const [measure, setMeasure] = useState([]);
+  const history = useHistory();
+  const [share, setShare] = useState(false);
+  const [heart, setHeart] = useState(false);
+  const [disable, setDisable] = useState(true);
+  const [check, setCheck] = useState([]);
+  const [finalizada, setFinalizada] = useState([]);
+
+  const onShareClick = () => {
+    const content = `${window.origin}/${fixedurl}`;
+    clipboardCopy(content);
+    setShare(true);
+  };
+
+  const getFood = async (endpoint, getlists, setfood, type) => {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    getlists(data[type][0], 'strIngredient', setIngredients);
+    getlists(data[type][0], 'strMeasure', setMeasure);
+    setfood(data[type][0]);
+  };
+>>>>>>> fc48e253740099d6538b1036d931e9840a0b6d4f
 
 const RecipeInProgress = () => {
   const { url, params: { id } } = useRouteMatch();
@@ -158,9 +196,22 @@ const RecipeInProgress = () => {
     .values(isIngredientChecked)
     .every((ingredientCheckedState) => ingredientCheckedState);
 
+<<<<<<< HEAD
   const onFinishRecipe = () => {
     push('/done-recipes');
   };
+=======
+  const btnShare = (
+    <button
+      type="button"
+      data-testid="share-btn"
+      src={ shareIcon }
+      onClick={ () => onShareClick() }
+    >
+      <img src={ shareIcon } alt="share-icon" />
+    </button>
+  );
+>>>>>>> fc48e253740099d6538b1036d931e9840a0b6d4f
 
   const isFetching = !recipeData || !recommendationData.length;
 

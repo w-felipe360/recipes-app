@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
+import RecommendationCard from '../components/RecommendationCard';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-import RecommendationCard from '../components/RecommendationCard';
 import { addToLocalStorage, createLocalStorage, getLocalStorage,
   removeFavoriteRecipe } from '../helpers/localStorage';
 import styles from './RecipeDetails.module.css';
