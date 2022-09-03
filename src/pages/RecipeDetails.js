@@ -4,8 +4,8 @@ import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-import RecommendationCard from '../components/RecommendationCard2';
-import { addFavoriteRecipe, createLocalStorage, getLocalStorage,
+import RecommendationCard from '../components/RecommendationCard';
+import { addToLocalStorage, createLocalStorage, getLocalStorage,
   removeFavoriteRecipe } from '../helpers/localStorage';
 import styles from './RecipeDetails.module.css';
 
@@ -99,22 +99,21 @@ const RecipeDetails = () => {
 
   const renderIngredients = () => {
     const ingredients = Object.keys(recipeData)
-      .filter((ingredientItem) => ingredientItem.includes('strIngredient'));
+      .filter((ingredientItem) => ingredientItem.includes('strIngredient')
+      && recipeData[ingredientItem]);
     const measures = Object.keys(recipeData)
       .filter((measureItem) => measureItem.includes('strMeasure'));
 
     const ingredientsArray = ingredients
       .map((ingredient, index) => {
-        const measure = recipeData[measures[index]]
-          ? ` - ${recipeData[measures[index]]}`
-          : '';
-
+        const ingredientStr = recipeData[ingredient];
+        const measureStr = recipeData[measures[index]];
         return (
           <li
             key={ ingredient }
             data-testid={ `${index}-ingredient-name-and-measure` }
           >
-            {`${recipeData[ingredient]}${measure}`}
+            {`${ingredientStr} - ${measureStr}`}
           </li>
         );
       });
@@ -141,7 +140,7 @@ const RecipeDetails = () => {
   const onFavoriteClick = () => {
     const payload = { alcoholicOrNot, category, id, image, name, nationality, type };
     if (!isFavorite) {
-      addFavoriteRecipe(payload);
+      addToLocalStorage('favoriteRecipes', payload);
       setIsFavorite(true);
     }
     if (isFavorite) {

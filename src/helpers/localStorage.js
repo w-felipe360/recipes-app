@@ -25,9 +25,18 @@ export const removeFavoriteRecipe = (id) => {
   return (filteredData);
 };
 
-export const addFavoriteRecipe = (payload) => {
-  createLocalStorage('favoriteRecipes');
-  const data = getLocalStorage('favoriteRecipes');
+export const addToLocalStorage = (key, payload, initialState) => {
+  createLocalStorage(key, initialState);
+  const data = getLocalStorage(key);
   const updatedData = [...data, payload];
-  setLocalStorage('favoriteRecipes', updatedData);
+  setLocalStorage(key, updatedData);
+};
+
+export const addRecipeInProgressToStorage = (key, payload, isMeal) => {
+  createLocalStorage(key, {});
+  const data = getLocalStorage(key);
+  const updatedData = isMeal
+    ? { ...data, meals: { ...payload } }
+    : { ...data, cocktails: { ...payload } };
+  setLocalStorage(key, updatedData);
 };

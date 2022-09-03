@@ -6,8 +6,7 @@ import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import ggDrink from './mocks/ggDrink';
-import { addFavoriteRecipe, createLocalStorage, setLocalStorage } from '../helpers/localStorage';
-import doneDrink from './mocks/doneDrink';
+import { createLocalStorage, setLocalStorage } from '../helpers/localStorage';
 
 beforeEach(() => {
   jest.spyOn(global, 'fetch')
@@ -20,7 +19,6 @@ describe('Testa o componente Recipes', () => {
   it('Testa se a página de DoneRecipes renderiza corretamente', async () => {
     createLocalStorage('favoriteRecipes');
     setLocalStorage('favoriteRecipes', ggDrink);
-    // addFavoriteRecipe(ggDrink)
     window.document.execCommand = jest.fn(() => true);
     const { history } = renderWithRouterAndRedux(<App />, undefined, '/drinks/15997');
     await waitForElementToBeRemoved(() => screen.getByText(/Loading.../i));
