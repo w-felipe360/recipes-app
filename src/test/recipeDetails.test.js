@@ -38,7 +38,7 @@ describe('Testa o componente Recipes', () => {
     expect(favoriteButtonAfterClick).toHaveAttribute('src', whiteHeartIcon);
     userEvent.click(favoriteButtonAfterClick);
 
-    // ❓
+    // ❓❓
     // const startRecipe = screen.getByTestId('start-recipe-btn');
     // userEvent.click(startRecipe);
 
