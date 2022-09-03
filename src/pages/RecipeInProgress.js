@@ -41,8 +41,8 @@ const RecipeInProgress = () => {
   const nationality = strArea || '';
 
   useEffect(() => {
-    createLocalStorage('inProgressRecipe', { meals: {}, cocktails: {} });
-    const data = getLocalStorage('inProgressRecipe');
+    createLocalStorage('inProgressRecipes', { meals: {}, cocktails: {} });
+    const data = getLocalStorage('inProgressRecipes');
     console.log(data);
     const { [id]: item, ...rest } = isMeal ? data.meals : data.cocktails;
     console.log(rest);
@@ -98,7 +98,7 @@ const RecipeInProgress = () => {
   const onIngredientClick = (controlledState) => {
     setIsIngredientChecked(controlledState);
     const payload = { [id]: controlledState };
-    addRecipeInProgressToStorage('inProgressRecipe', payload, isMeal);
+    addRecipeInProgressToStorage('inProgressRecipes', payload, isMeal);
   };
 
   const renderIngredients = () => {

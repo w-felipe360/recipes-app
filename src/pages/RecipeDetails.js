@@ -86,6 +86,8 @@ const RecipeDetails = () => {
     const isAlreadyInProgressOnLoad = () => {
       createLocalStorage('inProgressRecipes', {});
       const localStorageData = getLocalStorage('inProgressRecipes');
+      console.log(localStorageData);
+      console.log(localStorageData?.meals || localStorageData?.cocktails);
       if (localStorageData?.meals || localStorageData?.cocktails) {
         const idList = isMeal
           ? Object.keys(localStorageData?.meals)
