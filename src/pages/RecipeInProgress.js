@@ -43,17 +43,21 @@ const RecipeInProgress = () => {
   useEffect(() => {
     createLocalStorage('inProgressRecipes', { meals: {}, cocktails: {} });
     const data = getLocalStorage('inProgressRecipes');
-    console.log(data);
-    const { [id]: item, ...rest } = isMeal ? data.meals : data.cocktails;
-    console.log(rest);
-    // log pro linter não reclamar do rest não sendo usado
+    const selectedObject = isMeal ? data.meals : data.cocktails;
 
-    if (!item) {
-      const ingredientsInitialState = ingredients
-        .reduce((acc, cv) => ({ ...acc, [cv]: !cv }), {});
-      return setIsIngredientChecked(ingredientsInitialState);
+    if (selectedObject) {
+      const { [id]: item, ...rest } = selectedObject;
+      console.log(selectedObject);
+      console.log(rest);
+      // log pro linter não reclamar do rest não sendo usado
+
+      if (!item) {
+        const ingredientsInitialState = ingredients
+          .reduce((acc, cv) => ({ ...acc, [cv]: !cv }), {});
+        return setIsIngredientChecked(ingredientsInitialState);
+      }
+      setIsIngredientChecked(item);
     }
-    setIsIngredientChecked(item);
   }, [recipeData]);
 
   useEffect(() => {
