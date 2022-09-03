@@ -85,10 +85,12 @@ test('se o botão de finalizar receita funciona corretamente', async () => {
   expect(history.location.pathname).toBe('/done-recipes');
 });
 test('clipboard', async () => {
+  window.document.execCommand = jest.fn(() => true);
   const { history } = renderWithRouterAndRedux(<App />);
   history.push(url);
+  await waitForElementToBeRemoved(() => screen.getByText(/Loading.../i));
   const shareIcon = screen.getByTestId('share-btn');
   userEvent.click(shareIcon);
-  const share = await findByText('Link copied!');
+  const share = await screen.findByText('Link copied!');
   expect(share).toBeInTheDocument();
 });
