@@ -13,7 +13,6 @@ const requestFilteredCategoriesThunk = (type, category) => async (dispatch) => {
 
   const response = await fetch(endpoint);
   const data = await response.json();
-  console.log(data);
   dispatch(onFetchFilteredRecipeSuccess(data));
 };
 

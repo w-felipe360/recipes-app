@@ -25,3 +25,11 @@
 .input {
   text-decoration: none solid black;
 }
+
+/* .checkbox {
+  display: none;
+} */
+
+.strikethrough {
+  text-decoration: line-through;
+}

@@ -22,6 +22,7 @@ describe('Testa o componente Recipes', () => {
     expect(titles).toHaveLength(2);
   });
   it('Testa se a página de DoneRecipes filtra as receitas corretamente', async () => {
+    window.document.execCommand = jest.fn(() => true);
     renderWithRouterAndRedux(<App />, undefined, '/done-recipes');
     const titlesStr = '0-horizontal-name';
 
@@ -48,6 +49,14 @@ describe('Testa o componente Recipes', () => {
     expect(dishAfterFilter).toBeInTheDocument();
 
     const titlesAfterFilter = screen.getAllByRole('heading', { level: 4 });
-    expect(titlesAfterFilter).toHaveLength(2);
+    screen.logTestingPlaygroundURL();
+    const three = 3;
+    expect(titlesAfterFilter).toHaveLength(three);
+
+    const shareButton = screen.getAllByRole('button', { name: /sharebutton/i });
+    userEvent.click(shareButton[0]);
+    screen.logTestingPlaygroundURL();
+    const linkCopied = await screen.findByText(/Link copied!/i);
+    expect(linkCopied).toBeInTheDocument();
   });
 });

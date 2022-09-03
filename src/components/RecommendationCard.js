@@ -1,35 +1,20 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './Recommendations.module.css';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-function RecommendationCard({ data, recipe, testidCard, testidTitle }) {
-//   console.log(key);
+function RecommendationCard({ data, index }) {
+  const alcoholicOrNot = data.strAlcoholic || data.strArea;
+  const thumb = data.strMealThumb || data.strDrinkThumb;
+  const name = data.strMeal || data.strDrink;
   return (
-    <div className={ styles['card-container'] }>
-      {recipe === 'food' ? (
-        <div data-testid={ testidCard }>
-          <img
-            src={ data.strMealThumb }
-            alt={ data.strMeal }
-            width="250px"
-            height="150px"
-          />
-          <p>{data.strCategory}</p>
-          <p data-testid={ testidTitle }>{data.strMeal}</p>
-        </div>
-      ) : (
-        <div data-testid={ testidCard }>
-          <img
-            src={ data.strDrinkThumb }
-            alt={ data.strDrink }
-            width="250px"
-            height="150px"
-          />
-          <p>{data.strAlcoholic}</p>
-          <p data-testid={ testidTitle }>{data.strDrink}</p>
-        </div>
-      )}
+    <div data-testid={ `${index}-recomendation-card` }>
+      <img
+        src={ thumb }
+        alt={ name }
+        width="250px"
+        height="150px"
+      />
+      <p>{alcoholicOrNot}</p>
+      <p data-testid={ `${index}-recomendation-title` }>{name}</p>
     </div>
   );
 }
@@ -41,11 +26,10 @@ RecommendationCard.propTypes = {
     strDrink: PropTypes.string,
     strDrinkThumb: PropTypes.string,
     strMeal: PropTypes.string,
+    strArea: PropTypes.string,
     strMealThumb: PropTypes.string,
   }).isRequired,
-  recipe: PropTypes.string.isRequired,
-  testidCard: PropTypes.string.isRequired,
-  testidTitle: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default RecommendationCard;

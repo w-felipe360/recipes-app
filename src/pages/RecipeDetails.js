@@ -1,233 +1,228 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
-import { getLists, heartFunction, youVideo } from '../helpers/recipesFunctions';
 import RecommendationCard from '../components/RecommendationCard';
-import styles from '../components/Recommendations.module.css';
+import { addToLocalStorage, createLocalStorage, getLocalStorage,
+  removeFavoriteRecipe } from '../helpers/localStorage';
+import styles from './RecipeDetails.module.css';
 
-// http://localhost:3000/drinks/11007
-// http://localhost:3000/foods/52772
+const RecipeDetails = () => {
+  const { url, params: { id } } = useRouteMatch();
+  const { push, location: { pathname } } = useHistory();
 
-const RecipeDetails = (props) => {
-  const { url } = useRouteMatch();
-  const { match } = props;
-  const recipeId = match.params.id;
-  const [food, setFood] = useState('');
-  const [ingredients, setIngredients] = useState([]);
-  const [measure, setMeasure] = useState([]);
-  const history = useHistory();
-  const [share, setShare] = useState(false);
-  const [heart, setHeart] = useState(false);
-  const [check, setCheck] = useState([]);
-  const [finalizada, setFinalizada] = useState([]);
-  const [recommendation, setRecommendation] = useState([]);
+  const [recipeData, setRecipeData] = useState([]);
+  const [recommendationData, setRecommendationData] = useState([]);
+
+  const [isCopied, setIsCopied] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isRecipeAlreadyDone, setIsRecipeAlreadyDone] = useState(false);
+  const [isRecipeInProgress, setIsRecipeInProgress] = useState(false);
+
+  const { strMeal, strDrink, strMealThumb, strDrinkThumb, strCategory: category,
+    strInstructions: instructions, strYoutube: youtubeUrl, strAlcoholic,
+    strArea } = recipeData;
+
+  const isMeal = url.includes('food');
+  const name = strMeal || strDrink;
+  const image = strMealThumb || strDrinkThumb;
+  const type = url.includes('food') ? 'food' : 'drink';
+  const subcategory = isMeal ? category : strAlcoholic;
+  const alcoholicOrNot = strAlcoholic || '';
+  const nationality = strArea || '';
+
+  useEffect(() => {
+    const fetchRecipeData = async () => {
+      const foodEndpoint = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const drinkEndpoint = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const endpoint = isMeal ? foodEndpoint : drinkEndpoint;
+      const fetchData = await fetch(endpoint);
+      const response = await fetchData.json();
+      const object = response?.meals || response?.drinks;
+
+      setRecipeData(object[0]);
+    };
+    fetchRecipeData();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecommendationData = async () => {
+      const foodEndpoint = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+      const drinkEndpoint = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+      const endpoint = isMeal ? foodEndpoint : drinkEndpoint;
+      const fetchData = await fetch(endpoint);
+      const response = await fetchData.json();
+      const flattenedResponse = response?.meals || response?.drinks;
+      const maxRecipes = 6;
+      const filteredResponse = flattenedResponse.slice(0, maxRecipes);
+      setRecommendationData(filteredResponse);
+    };
+    fetchRecommendationData();
+  }, []);
+
+  useEffect(() => {
+    const isFavoriteOnLoad = () => {
+      createLocalStorage('favoriteRecipes');
+      const localStorageData = getLocalStorage('favoriteRecipes');
+      const isAlreadyFavorite = localStorageData.some((item) => item.id === id);
+      if (isAlreadyFavorite) { setIsFavorite(true); }
+    };
+    isFavoriteOnLoad();
+  }, []);
+
+  useEffect(() => {
+    const isAlreadyDoneOnLoad = () => {
+      createLocalStorage('doneRecipes');
+      const localStorageData = getLocalStorage('doneRecipes');
+      const isAlreadyDone = localStorageData.some((item) => item.id === id);
+      if (isAlreadyDone) { setIsRecipeAlreadyDone(true); }
+    };
+    isAlreadyDoneOnLoad();
+  }, []);
+
+  useEffect(() => {
+    const isAlreadyInProgressOnLoad = () => {
+      createLocalStorage('inProgressRecipes', {});
+      const localStorageData = getLocalStorage('inProgressRecipes');
+      console.log(localStorageData);
+      console.log(localStorageData?.meals || localStorageData?.cocktails);
+      if (localStorageData?.meals || localStorageData?.cocktails) {
+        const idList = isMeal
+          ? Object.keys(localStorageData?.meals)
+          : Object.keys(localStorageData?.cocktails);
+        const isAlreadyInProgress = idList.some((item) => item.includes(id));
+        if (isAlreadyInProgress) { setIsRecipeInProgress(true); }
+      }
+    };
+    isAlreadyInProgressOnLoad();
+  }, []);
+
+  const renderIngredients = () => {
+    const ingredients = Object.keys(recipeData)
+      .filter((ingredientItem) => ingredientItem.includes('strIngredient')
+      && recipeData[ingredientItem]);
+    const measures = Object.keys(recipeData)
+      .filter((measureItem) => measureItem.includes('strMeasure'));
+
+    const ingredientsArray = ingredients
+      .map((ingredient, index) => {
+        const ingredientStr = recipeData[ingredient];
+        const measureStr = recipeData[measures[index]];
+        return (
+          <li
+            key={ ingredient }
+            data-testid={ `${index}-ingredient-name-and-measure` }
+          >
+            {`${ingredientStr} - ${measureStr}`}
+          </li>
+        );
+      });
+    return <ul>{ingredientsArray}</ul>;
+  };
+
+  const renderRecommendationCards = () => recommendationData.map((itemData, index) => {
+    const { idDrink, idMeal } = itemData;
+    const key = idDrink || idMeal;
+    return (
+      <RecommendationCard
+        key={ key }
+        data={ itemData }
+        index={ index }
+      />
+    );
+  });
 
   const onShareClick = () => {
     clipboardCopy(`${window.origin}${url}`);
-    setShare(true);
+    setIsCopied(true);
   };
 
-  const getFood = async (endpoint, getlists, setfood, type) => {
-    if (type === 'meals') {
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      getlists(data[type][0], 'strIngredient', setIngredients);
-      getlists(data[type][0], 'strMeasure', setMeasure);
-      setfood(data[type][0]);
-      const responseRE = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-      const dataRE = await responseRE.json();
-      const newDataRE = dataRE.drinks;
-      const six = 6;
-      setRecommendation(newDataRE.slice(0, six));
-    } else {
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      getlists(data[type][0], 'strIngredient', setIngredients);
-      getlists(data[type][0], 'strMeasure', setMeasure);
-      setfood(data[type][0]);
-      const responseRE = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-      const dataRE = await responseRE.json();
-      const newDataRE = dataRE.meals;
-      const six = 6;
-      setRecommendation(newDataRE.slice(0, six));
+  const onFavoriteClick = () => {
+    const payload = { alcoholicOrNot, category, id, image, name, nationality, type };
+    if (!isFavorite) {
+      addToLocalStorage('favoriteRecipes', payload);
+      setIsFavorite(true);
+    }
+    if (isFavorite) {
+      removeFavoriteRecipe(id);
+      setIsFavorite(false);
     }
   };
 
-  const mealsEnd = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
-  const drinkEnd = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
-
-  const getRecipeDet = () => (match.path.includes('food') ? (
-    getFood(mealsEnd, getLists, setFood, 'meals')) : (
-    getFood(drinkEnd, getLists, setFood, 'drinks')));
-
-  const funcFinishRecipee = () => {
-    history.push(`/${food.strMeal ? 'foods' : 'drinks'}/${recipeId}/in-progress`);
+  const onStartRecipe = () => {
+    const pathToPush = `${pathname}/in-progress`;
+    push(pathToPush);
   };
 
-  const generateList = ingredients.map((e) => (
-    <p
-      data-testid={ `${ingredients.indexOf(e)}-ingredient-name-and-measure` }
-      id={ `${ingredients.indexOf(e)}-ingredient-step` }
-      key={ e }
-    >
-      {measure[ingredients.indexOf(e)] ? `${e} - ${measure[ingredients.indexOf(e)]}`
-        : e}
-    </p>
-  ));
+  const isFetching = !recipeData || !recommendationData.length;
 
-  useEffect(() => {
-    getRecipeDet();
-    if (JSON.parse(localStorage.getItem('inProgressRecipes')) !== null) {
-      setCheck(JSON.parse(localStorage.getItem('inProgressRecipes')));
-    }
-    if (JSON.parse(localStorage.getItem('doneRecipes')) !== null) {
-      const vv = [];
-      JSON.parse(localStorage.getItem('doneRecipes')).forEach((e) => vv.push(e.id));
-      setFinalizada(vv);
-    }
-    if (JSON.parse(localStorage.getItem('favoriteRecipes')) !== null) {
-      const aa = [];
-      JSON.parse(localStorage.getItem('favoriteRecipes')).map((e) => aa.push(e.id));
-      if (aa.includes(recipeId)) {
-        setHeart(true);
-      }
-    }
-  }, []);
-
-  const btnStart = (
-    <button
-      type="submit"
-      data-testid="start-recipe-btn"
-      onClick={ funcFinishRecipee }
-      className={ styles.container }
-    >
-      {check !== [] && !!check
-        .find((e) => e.includes(recipeId)) ? 'Continue Recipe' : 'Start Recipe'}
-    </button>
-  );
-
-  const btnShare = (
-    <button
-      type="button"
-      data-testid="share-btn"
-      src={ shareIcon }
-      onClick={ () => onShareClick() }
-    >
-      <img src={ shareIcon } alt="share-icon" />
-    </button>
-  );
-
-  const thumb = (param1, param2) => (
-    <img
-      src={ food[param1] }
-      alt={ food[param2] }
-      data-testid="recipe-photo"
-      width="500px"
-      height="300px"
-    />
-  );
-
-  const btnFavorite = (param) => (
-    <button
-      type="button"
-      data-testid="favorite-btn"
-      src={ heart ? blackHeartIcon : whiteHeartIcon }
-      onClick={ () => heartFunction(param, recipeId, food, setHeart) }
-    >
-      <img
-        src={ heart ? blackHeartIcon : whiteHeartIcon }
-        alt="heart-icon"
-      />
-    </button>
-  );
-
-  const generateRecommendations = (param) => {
-    if (param === 'drink') {
-      return recommendation.map((e) => (
-        <RecommendationCard
-          key={ e.strMeal }
-          data={ e }
-          recipe="food"
-          testidCard={ `${recommendation.indexOf(e)}-recomendation-card` }
-          testidTitle={ `${recommendation.indexOf(e)}-recomendation-title` }
-        />
-      ));
-    }
-    return recommendation.map((e) => (
-      <RecommendationCard
-        key={ e.strDrink }
-        data={ e }
-        recipe="drink"
-        testidCard={ `${recommendation.indexOf(e)}-recomendation-card` }
-        testidTitle={ `${recommendation.indexOf(e)}-recomendation-title` }
-      />
-    ));
-  };
-
+  if (isFetching) {
+    return <span>Loading...</span>;
+  }
   return (
-    <div>
-      {
-        match.path.includes('food') && food ? (
-          <div>
-            {thumb('strMealThumb', 'strMeal')}
-            <br />
-            {btnShare}
-            {btnFavorite('food')}
-            {share ? (<p>Link copied!</p>) : ('')}
-            <p data-testid="recipe-title">{food.strMeal}</p>
-            <p data-testid="recipe-category">{food.strCategory}</p>
-            <h3>Ingredients</h3>
-            {generateList}
-            <h3>Instructions</h3>
-            <p data-testid="instructions">{food.strInstructions}</p>
-            <h3>Video</h3>
-            {youVideo(food)}
-            <h3>Recommended</h3>
-            <div className={ styles.recommendation }>
-              {generateRecommendations('food')}
-            </div>
-            {!finalizada.includes(recipeId) && btnStart}
-          </div>
-        ) : (match.path.includes('drink') && food && (
-          <div>
-            {thumb('strDrinkThumb', 'strDrink')}
-            <br />
-            {btnShare}
-            {btnFavorite('drink')}
-            {share ? (<p>Link copied!</p>) : ('')}
-            <p data-testid="recipe-title">{food.strDrink}</p>
-            <p data-testid="recipe-category">{food.strAlcoholic}</p>
-            <h3>Ingredients</h3>
-            {generateList}
-            <h3>Instructions</h3>
-            <p data-testid="instructions">{food.strInstructions}</p>
-            <h3>Recommended</h3>
-            <div className={ styles.recommendation }>
-              {generateRecommendations('drink')}
-            </div>
-            {!finalizada.includes(recipeId) && btnStart}
-          </div>
-        )
-        )
-      }
-    </div>
+    <main>
+      <img
+        src={ image }
+        alt={ `${name} recipe` }
+        data-testid="recipe-photo"
+      />
+      <button
+        type="button"
+        data-testid="share-btn"
+        src={ shareIcon }
+        onClick={ () => onShareClick() }
+      >
+        <img src={ shareIcon } alt="share-icon" />
+      </button>
+      <button
+        type="button"
+        data-testid="favorite-btn"
+        src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+        onClick={ () => onFavoriteClick() }
+      >
+        <img src={ isFavorite ? blackHeartIcon : whiteHeartIcon } alt="share-icon" />
+      </button>
+      { isCopied && <span>Link copied!</span> }
+      <p data-testid="recipe-title">{name}</p>
+      <p data-testid="recipe-category">{`${subcategory}`}</p>
+      <h3>Ingredients</h3>
+      { renderIngredients() }
+      <h3>Instructions</h3>
+      <p data-testid="instructions">{instructions}</p>
+      { isMeal && (
+        <>
+          <h3>Video</h3>
+          <iframe
+            data-testid="video"
+            width="560"
+            height="315"
+            src={ `https://www.youtube.com/embed/${youtubeUrl}` }
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;
+            picture-in-picture"
+            allowFullScreen
+          />
+        </>
+      ) }
+      <h3> Recomendations </h3>
+      <div className={ styles['recommendation-container'] }>
+        { renderRecommendationCards() }
+      </div>
+      {!isRecipeAlreadyDone && (
+        <button
+          className={ styles['start-button'] }
+          type="button"
+          data-testid="start-recipe-btn"
+          onClick={ () => onStartRecipe() }
+        >
+          { isRecipeInProgress ? 'Continue Recipe' : 'Start Recipe' }
+        </button>
+      )}
+    </main>
   );
-};
-
-RecipeDetails.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string,
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-    path: PropTypes.shape({
-      includes: PropTypes.func,
-    }),
-  }).isRequired,
 };
 
 export default RecipeDetails;

@@ -1,0 +1,13 @@
+.start-button {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+}
+
+.recommendation-container {
+  display: flex;
+  height: 250px;
+  overflow: auto;
+  width: 360px;
+}

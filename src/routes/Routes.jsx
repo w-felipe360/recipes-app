@@ -12,7 +12,6 @@ function Routes() {
   return (
     <div>
       <Switch>
-        {/* As rotas a baixo foram as primeiras que desenvolvemos */}
         <Route path="/foods/:id/in-progress" component={ RecipeInProgress } />
         <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
         <Route exact path="/foods/:id" component={ RecipeDetails } />
@@ -29,9 +28,6 @@ function Routes() {
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/profile" component={ Profile } />
         <Route path="/favorite-recipes" component={ FavoriteRecipes } />
-
-        {/* As rotas a baixo tem o path exigido pelo projeto */}
-
         <Route exact path="/" component={ Login } />
       </Switch>
     </div>
