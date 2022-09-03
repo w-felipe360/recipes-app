@@ -12,11 +12,6 @@ export const setLocalStorage = (key, payload) => localStorage.setItem(key, JSON
 export const saveTokenToLocalStorage = (key, payload) => localStorage
   .setItem(key, payload);
 
-export const getToken = () => {
-  const data = localStorage.getItem('token');
-  return data;
-};
-
 export const removeFavoriteRecipe = (id) => {
   createLocalStorage('favoriteRecipes');
   const data = getLocalStorage('favoriteRecipes');
